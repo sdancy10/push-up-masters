@@ -1,0 +1,54 @@
+<h1 mat-dialog-title><strong>{{action}}</strong></h1>
+<div mat-dialog-content>
+  <form [formGroup]="exerciseForm" (ngSubmit)="doAction()">
+    <mat-form-field *ngIf="action != 'Delete'">
+      <mat-label>Exercise</mat-label>
+      <mat-select formControlName="exerciseId" [errorStateMatcher]="matcher">
+        <mat-option *ngFor="let exercise of exercises" [value]="exercise.id">
+          {{exercise.exerciseName}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.exerciseId.invalid">
+        Please select a valid exercise.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="action != 'Delete'">
+      <mat-label>Reps</mat-label>
+      <mat-select formControlName="reps"  name="reps" [errorStateMatcher]="matcher" >
+        <mat-option *ngFor="let repCount of repRange" [value]="repCount">
+          {{repCount}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.reps.invalid">
+        Please select a valid number of repetitions.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="action != 'Delete'">
+      <input matInput formControlName="set" placeholder="Set Name"  [errorStateMatcher]="matcher"/>
+      <mat-error *ngIf="f.set.invalid">
+        Please enter a set name.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="action != 'Delete'">
+      <input matInput formControlName="duration" placeholder="Duration"  [errorStateMatcher]="matcher" />
+    </mat-form-field>
+    <mat-form-field *ngIf="action != 'Delete'">
+      <input matInput formControlName="userId" placeholder="Username/Name"  [errorStateMatcher]="matcher"/>
+      <mat-error *ngIf="f.userId.invalid">
+        Please enter a valid name.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="action != 'Delete'">
+      <input matInput formControlName="creationDate" placeholder="Date"  [matDatepicker]="myDatepicker" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="f.creationDate.invalid">
+        Please select a valid date.
+      </mat-error>
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="doAction()">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+</div>
