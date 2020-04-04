@@ -1,0 +1,23 @@
+<div class="flex">
+  <div class="flex-item">
+    <div style="display: block;">
+      <canvas baseChart width="400" height="400"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              [plugins]="lineChartPlugins"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+    </div>
+  </div>
+  <div class="flex-item" *ngIf="false">
+    <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
+    <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
+    <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
+    <button mat-button mat-raised-button color="primary" (click)="hideOne()">Sets/Reps Toggle</button>
+    <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
+  </div>
+</div>

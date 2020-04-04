@@ -1,0 +1,18 @@
+<table mat-table [dataSource]="splicedData" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
+  <ng-container [matColumnDef]="column.name" *ngFor="let column of displayedColumns" >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.name}} </th>
+    <td mat-cell *matCellDef="let element" [width]="column.key === 'exerciseSummary' ? '200px' : ''">
+      <p *ngIf="column.key != 'creationDate' && column.key != 'Edit'">{{element[column.key]}}</p>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+</table>
+<mat-paginator #paginator
+               [length]="this.groupByUserData.data.length"
+               [pageSize]="pageSize"
+               [showFirstLastButtons]="true"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="pageChangeEvent($event)"></mat-paginator>
+<button (click)="test()" *ngIf="uatTesting"></button>

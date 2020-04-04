@@ -1,0 +1,24 @@
+<h1 mat-dialog-title><strong>{{action}}</strong></h1>
+<div mat-dialog-content>
+  <mat-form-field *ngIf="action != 'Delete'; else elseTemplate">
+    <input placeholder="Exercise Name" matInput [(ngModel)]="local_data.exerciseName">
+  </mat-form-field>
+  <mat-form-field *ngIf="action != 'Delete'">
+    <input placeholder="Exercise Type" matInput [(ngModel)]="local_data.exerciseType">
+  </mat-form-field>
+  <mat-form-field *ngIf="action != 'Delete'">
+    <input placeholder="Exercise Summary" matInput [(ngModel)]="local_data.exerciseSummary">
+  </mat-form-field>
+  <mat-form-field *ngIf="action != 'Delete'">
+    <input matInput placeholder="Created Date" [(ngModel)]="local_data.creationDate" [matDatepicker]="myDatepicker">
+    <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #myDatepicker></mat-datepicker>
+  </mat-form-field>
+  <ng-template #elseTemplate>
+    Delete <b>{{local_data.exerciseType | titlecase}} Excercise - {{local_data.exerciseName}} </b>?
+  </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="doAction()">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+</div>
