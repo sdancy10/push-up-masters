@@ -22,6 +22,9 @@ import {AngularFirestore,AngularFirestoreModule } from "@angular/fire/firestore"
 import { environment } from '../environments/environment';
 import { ExercisesComponent } from './exercises/exercises.component';
 import { ExerciseExecutionsComponent } from './exercise-executions/exercise-executions.component';
+import {MatSortModule} from "@angular/material/sort";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 
@@ -42,13 +45,16 @@ import { ExerciseExecutionsComponent } from './exercise-executions/exercise-exec
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    MaterialModule,
-    MatNativeDateModule,
     ReactiveFormsModule,
     ChartsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
     AngularFirestoreModule,
+    MaterialModule,
+    MatNativeDateModule,
+    MatSortModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   entryComponents: [DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent],
   providers: [
