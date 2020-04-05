@@ -1,6 +1,8 @@
 import {Exercise} from "./Exercise";
 import {User} from "./User";
 import {Time} from "@angular/common";
+import {firestore} from 'firebase'
+
 
 export interface ExerciseExecution {
   id: string;
@@ -9,5 +11,5 @@ export interface ExerciseExecution {
   duration: TimeRanges;
   userId: string;
   exerciseId: string;
-  creationDate: {seconds,nanoseconds};
+  creationDate: firestore.Timestamp;
 }

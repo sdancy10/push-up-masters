@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import {ExerciseDataService} from "../services/exercise-data.service";
 import {ExerciseExecutionsService} from "../services/exercise-executions.service";
 import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 
@@ -98,15 +97,14 @@ export class StatsAggregateLinechartComponent implements OnInit {
           ...e.payload.doc.data()
         } as ExerciseExecution;
       });
+
       let aggData = this.exerciseService.getAggregateData(this.exerciseData, ['userId', 'creationDate']);
       let lineData = this.exerciseService.getAggregateLineData(aggData, ['userId']);
       this.lineChartData = lineData;
+      this.lineChartLabels = [];
 
-      this.lineChartLabels = [] ;
       this.exerciseData.forEach(label => {
-        var t = new Date(1970, 0, 1); // Epoch
-        t.setSeconds(label.creationDate.seconds);
-        this.lineChartLabels.push(t.toLocaleDateString());
+        this.lineChartLabels.push(String(label.creationDate));
       });
       this.lineChartLabels = [...new Set(this.lineChartLabels)];
       this.lineChartLabels.forEach( function(lbl,idx)
