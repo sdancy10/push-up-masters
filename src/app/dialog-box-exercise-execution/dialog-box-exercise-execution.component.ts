@@ -39,7 +39,7 @@ export class DialogBoxExerciseExecutionComponent implements OnInit {
   repsFormControl = new FormControl('',[Validators.required]);
   setFormControl = new FormControl('',[Validators.required]);
   durationFormControl = new FormControl('',[]);
-  dateFormControl = new FormControl('',[Validators.required]);
+  dateFormControl = new FormControl(new Date(),[Validators.required]);
   exerciseForm: FormGroup;
   matcher = new CustomErrorStateMatcher();
 

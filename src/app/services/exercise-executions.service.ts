@@ -46,6 +46,7 @@ export class ExerciseExecutionsService {
   }
 
   public getAggregateData(data,property: string[]): any[] {
+    data.forEach(exercise => exercise.creationDate = exercise.creationDate.toDate().toLocaleDateString());
     const groupedData = this.groupBy(data, property);
     const reducedData = [];
 
@@ -58,15 +59,13 @@ export class ExerciseExecutionsService {
       let sets = groupedData[key].reduce((accumulator, currentValue) => {
         return accumulator += 1;
       }, initialValue)
-      var t = new Date(1970, 0, 1); // Epoch
-      t.setSeconds(groupedData[key][0].creationDate);
-      let time = t.toLocaleDateString();
+      var date = groupedData[key][0].creationDate;
 
       reducedData.push({
         userId: groupedData[key][0].userId,
         sets: sets,
         reps: reps,
-        creationDate: time,
+        creationDate: date,
       });
     }
     return reducedData;
