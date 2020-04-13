@@ -1,7 +1,12 @@
 table {
   width: 100%;
 }
-
+mat-header-cell, .mat-header-cell {
+  text-align: center;
+}
+mat-cell, .mat-cell {
+  text-align: center;
+}
 button {
-  margin: 16px 8px;
+  margin: 6px 6px;
 }
