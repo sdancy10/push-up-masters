@@ -6,6 +6,7 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import {Exercise} from "../interfaces/Exercise";
 import {ExerciseService} from "../services/exercise.service";
 import {ErrorStateMatcher} from "@angular/material/core";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
@@ -48,6 +49,7 @@ export class DialogBoxExerciseExecutionComponent implements OnInit {
     //@Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA)
     public data: ExerciseExecution,
+    private _snackBar: MatSnackBar,
     public exerciseService: ExerciseService,
     private formBuilder: FormBuilder)
   {
@@ -79,14 +81,22 @@ export class DialogBoxExerciseExecutionComponent implements OnInit {
 
   get f() { return this.exerciseForm.controls; }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    })
+  }
+
   doAction(){
     if (this.exerciseForm.invalid) {
       return;
     }
     this.dialogRef.close({event:this.action, data:this.exerciseForm.value});
+    this.openSnackBar(this.action + " action completed!", this.action);
   }
 
   closeDialog(){
     this.dialogRef.close({event:'Cancel'});
+    this.openSnackBar(this.action + " action cancelled!",this.action);
   }
 }
