@@ -38,7 +38,9 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
 
     this.displayedColumns = [{key:'sets', name:'Sets'},
       {key:'userId', name:'Name'},
-      {key:'reps', name:'Reps'}];
+      {key:'reps', name:'Reps'},
+      //{key:'controls', name:'Controls'}
+      ];
     this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
 
     this.exerciseExecutionsService.getExerciseExecutions().subscribe(data => {

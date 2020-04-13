@@ -36,7 +36,7 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
       ,{key:'reps', name:'Reps'}
       //,{key:'duration', name:'Duration'}
       ,{key:'creationDate', name:'Date'}
-      //,{key:'Edit', name:'Edit'}
+      ,{key:'Edit', name:'Edit'}
       ];
     this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
 
@@ -47,8 +47,7 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
           ...e.payload.doc.data()
         } as ExerciseExecution;
       }));
-      this.data.data.sort((a,b)=> (a.creationDate.seconds < b.creationDate.seconds) ? 1:-1)
-      this.splicedData = this.data.data.slice(this.offset).slice(0, this.pageSize);
+      this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
     });
     this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]
   }
@@ -56,12 +55,24 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
   ngAfterViewInit(): void {
     this.data.sort = this.sort;
     this.data.paginator = this.paginator;
-    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]
+    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.filteredData.length]
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.data.filter = filterValue.trim().toLowerCase();
+    this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
+
+    if (this.data.paginator) {
+      this.data.paginator.firstPage();
+    }
+  }
+
   pageChangeEvent(event: PageEvent) {
     const offset = ((event.pageIndex + 1) - 1) * event.pageSize;
-    this.splicedData = this.data.data.slice(offset).slice(0, event.pageSize);
+    this.splicedData = this.data.filteredData.slice(offset).slice(0, event.pageSize);
   }
+
 
   sortData(sort: Sort) {
     const data = this.splicedData.slice();

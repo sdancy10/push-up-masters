@@ -6,7 +6,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
@@ -25,6 +25,9 @@ import { ExerciseExecutionsComponent } from './exercise-executions/exercise-exec
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {UserService} from "./services/user-service.service";
+import {AuthService} from "./services/auth.service";
+import {MatInputModule} from "@angular/material/input";
 
 
 
@@ -52,13 +55,19 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     AngularFirestoreModule,
     MaterialModule,
     MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatSortModule,
     MatTableModule,
     MatPaginatorModule,
   ],
   entryComponents: [DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent],
   providers: [
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }, ExerciseDataService, AngularFirestore
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    ExerciseDataService,
+    AngularFirestore,
+    UserService,
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })
