@@ -1,14 +1,10 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { MatDialog, MatTable } from '@angular/material';
-import {PushUpElement} from "../interfaces/push-up-element";
-import {ExerciseDataService} from "../services/exercise-data.service";
-import {UserPushUpAggregateElement} from "../interfaces/user-push-up-aggregate-element";
+import { MatDialog } from '@angular/material';
 import {ExerciseExecutionsService} from "../services/exercise-executions.service";
 import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-stats-aggregate-table',
@@ -19,30 +15,33 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
-  displayedColumns: {key,name}[];
+  displayedColumns: {key,name}[] =
+    [
+      {key:'sets', name:'Sets'},
+      {key:'userId', name:'Name'},
+      {key:'reps', name:'Reps'},
+      //{key:'controls', name:'Controls'}
+    ];
   columnsToDisplay: string[] = [];
-  groupByUserData: MatTableDataSource<ExerciseExecution>;
-  data: MatTableDataSource<ExerciseExecution>;
+  groupByUserData: MatTableDataSource<ExerciseExecution> = new MatTableDataSource<ExerciseExecution>();
+  data: MatTableDataSource<ExerciseExecution> = new MatTableDataSource<ExerciseExecution>();
   splicedData: any;
   offset = 0;
   pageSize = 5;
   pageSizeOptions = [3,5,10];
-  uatTesting: boolean = false;
+  aggregations: {name: string, selected: boolean}[] =
+    [
+      {name:'All-Time', selected:true},
+      {name:'User', selected:false},
+      {name:'Date', selected:false}];
+  uatTesting: any;
 
   constructor(public dialog: MatDialog,
-              private exerciseExecutionsService: ExerciseExecutionsService) { }
+              private exerciseExecutionsService: ExerciseExecutionsService) {
+    this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
+  }
 
   ngOnInit() {
-    this.data = new MatTableDataSource<ExerciseExecution>();
-    this.groupByUserData = new MatTableDataSource<ExerciseExecution>();
-
-    this.displayedColumns = [{key:'sets', name:'Sets'},
-      {key:'userId', name:'Name'},
-      {key:'reps', name:'Reps'},
-      //{key:'controls', name:'Controls'}
-      ];
-    this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
-
     this.exerciseExecutionsService.getExerciseExecutions().subscribe(data => {
       this.data = new MatTableDataSource<ExerciseExecution>(data.map(e => {
         return {
@@ -56,11 +55,17 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
       this.groupByUserData.data.sort((a,b)=> (a.reps < b.reps) ? 1:-1)
       this.splicedData = this.groupByUserData.data.slice(this.offset).slice(0, this.pageSize);
     });
-
   }
+
   ngAfterViewInit(): void {
     this.groupByUserData.sort = this.sort;
     this.groupByUserData.paginator = this.paginator;
+  }
+
+  setAggregation(selectedAggregation: string): void{
+    this.aggregations.forEach( agg => {
+      agg.name == selectedAggregation ? agg.selected = true : agg.selected = false;
+    });
   }
 
   pageChangeEvent(event: PageEvent) {
@@ -87,8 +92,19 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
   }
 
   test() {
-    console.warn(this.data)
-    console.warn(this.groupByUserData)
+    this.exerciseExecutionsService
+      .getExerciseExecutionsByUser('Shane', 'D3ZYs2LBx10eDegpQxzo').subscribe(
+      data => this.uatTesting = new MatTableDataSource<ExerciseExecution>(
+        data.map(e => {
+          return {
+            id: e.payload.doc.id,
+            ...e.payload.doc.data()
+          } as ExerciseExecution;
+        }))
+    );
+    console.warn(
+      this.uatTesting
+    )
   }
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {

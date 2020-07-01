@@ -4,22 +4,24 @@ import * as firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firestore";
 import { User } from "../interfaces/user";
+import UserCredential = firebase.auth.UserCredential;
+import {firestore} from "firebase";
 
 
 @Injectable()
 export class AuthService {
 
   user: User;
-  userCredential: any;
+  userCredential: UserCredential;
 
   constructor(private afAuth: AngularFireAuth,
               private db: AngularFirestore,
               private router:Router)
               {
-                  this.afAuth.authState.subscribe( (userCredential) =>
+                  this.afAuth.authState.subscribe( (user) =>
                     {
-                      if (userCredential) {
-                        this.userCredential = userCredential;
+                      if (user) {
+                        this.user = user;
                       } else {
                         this.userCredential = null;
                       }
@@ -45,12 +47,12 @@ get currentUserObservable(): any {
 
 // Returns current user UID
 get currentUserId(): string {
-  return this.authenticated ? this.userCredential.uid : '';
+  return this.authenticated ? this.user.uid : '';
 }
 
 // Anonymous User
 get currentUserAnonymous(): boolean {
-  return this.authenticated ? this.userCredential.isAnonymous : false
+  return this.authenticated ? this.user.isAnonymous : false
 }
 
 // Returns current user display name or Guest
@@ -85,7 +87,8 @@ get currentUserDisplayName(): string {
   private socialSignIn(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) =>  {
-          this.user = credential.user
+        this.userCredential = credential
+        this.user = credential.user
           this.updateUserData(this.user)
       })
       .catch(error => console.log(error));
@@ -96,8 +99,9 @@ get currentUserDisplayName(): string {
 
   anonymousLogin() {
     return this.afAuth.auth.signInAnonymously()
-    .then((user) => {
-      this.user = this.userCredential
+    .then((credential) => {
+      this.userCredential = credential
+      this.user = credential.user
       this.updateUserData(this.user)
     })
     .catch(error => console.log(error));
@@ -105,22 +109,37 @@ get currentUserDisplayName(): string {
 
   //// Email/Password Auth ////
 
-  emailSignUp(email:string, password:string) {
+  emailSignUp(email:string, password:string, customUserProps?: User) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         this.userCredential = userCredential
-        this.updateUserData(this.userCredential)
+        this.user = userCredential.user
+        this.user.firstName = customUserProps.firstName
+        this.user.lastName = customUserProps.lastName
+        this.user.roles = customUserProps.roles
+        this.user.gender = customUserProps.gender
+        this.user.dateOfBirth = customUserProps.dateOfBirth
+        this.user.contactInformation = customUserProps.contactInformation
+        this.updateUserData(this.user)
+        return true
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log(error)
+        return error;
+      });
   }
 
   emailLogin(email:string, password:string) {
      return this.afAuth.auth.signInWithEmailAndPassword(email, password)
        .then((userCredential) => {
          this.userCredential = userCredential
-         this.updateUserData(this.userCredential)
+         this.user = userCredential.user
+         this.updateUserData(this.user)
        })
-       .catch(error => console.log(error));
+       .catch(error => {
+         console.log(error)
+         return error;
+       });
   }
 
   // Sends email allowing user to reset password
@@ -170,23 +189,45 @@ get currentUserDisplayName(): string {
       return false
     }
 
-  private updateUserData(userCredential) {
+  private updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${this.user.uid}`);
+    console.log(user)
     const data: User = {
-      uid: userCredential.uid,
+      uid: user.uid,
+      displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : user.firstName + user.lastName,
+      firstName: user.displayName !== null && user.displayName !== undefined ? user.displayName.split(" ")[0] : user.firstName,
+      lastName: user.displayName !== null && user.displayName !== undefined ? user.displayName.split(" ")[1] : user.lastName,
+      photoUrl: user.photoURL,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      isAnonymous: user.isAnonymous,
       contactInformation: {
-        id: userCredential.uid,
-        email: userCredential.email,
-        emailVerified: userCredential.emailVerified,
-        cellPhoneNumber: userCredential.phoneNumber
+        address: user.contactInformation.address,
+        email: user.contactInformation.email,
+        emailVerified: user.contactInformation.emailVerified,
+        cellPhoneNumber: user.contactInformation.cellPhoneNumber,
+        homePhoneNumber: user.contactInformation.homePhoneNumber,
+        workPhoneNumber: user.contactInformation.workPhoneNumber,
+        primaryContactMethod: user.contactInformation.primaryContactMethod,
+        facebook: user.contactInformation.facebook,
+        twitter: user.contactInformation.twitter,
+        instagram: user.contactInformation.instagram,
+        linkedin: user.contactInformation.linkedin,
+        tiktok: user.contactInformation.tiktok,
+        createBy: user.contactInformation.createBy,
+        createDate: user.contactInformation.createDate,
+        lastUpdateBy: this.userCredential.user.displayName,
+        lastUpdateDate: firestore.Timestamp.now()
       },
-      photoUrl: userCredential.photoURL,
       roles: {
-        subscriber: false
+        subscriber: false,
+        editor: false,
+        admin: false
       }
     }
     return userRef.set(data, { merge: true })
+    //return userRef.set(Object.assign({},data), { merge: true })
   }
 
 
