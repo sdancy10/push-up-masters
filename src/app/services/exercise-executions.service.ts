@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore} from "@angular/fire/firestore";
-import {Exercise} from "../interfaces/Exercise";
 import {ExerciseExecution} from "../interfaces/ExerciseExecution";
+import * as firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
+import WhereFilterOp = firebase.firestore.WhereFilterOp;
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +12,31 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 export class ExerciseExecutionsService {
   constructor(private firestore: AngularFirestore) { }
 
+  getExerciseExecutionsByUser(userId: string, exerciseId: string) {
+    return this.firestore.collection('exercise-executions',
+        ref =>
+          ref.where("userId","==", userId)
+            .where("exerciseId","==",exerciseId)
+            .orderBy('creationDate')
+            .orderBy('set')
+    ).snapshotChanges();
+  }
+
+  getExerciseExecutionsByDate(operator: WhereFilterOp, timeStamp: Timestamp, exerciseId: string) {
+    return this.firestore.collection('exercise-executions',
+      ref =>
+        ref.where("exerciseId","==", exerciseId)
+          .where("creationDate", operator, timeStamp)
+          .orderBy('creationDate')
+          .orderBy('set')
+    ).snapshotChanges();
+  }
+
   getExerciseExecutions() {
     return this.firestore.collection('exercise-executions',
-        ref => ref.orderBy('creationDate').orderBy('set')
+      ref =>
+        ref.orderBy('creationDate')
+          .orderBy('set')
     ).snapshotChanges();
   }
 

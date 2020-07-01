@@ -28,6 +28,15 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {UserService} from "./services/user-service.service";
 import {AuthService} from "./services/auth.service";
 import {MatInputModule} from "@angular/material/input";
+import { UserLoginComponent } from './user-login/user-login.component';
+import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/auth";
+import {
+  UserRegistrationComponent,
+  UserRegistrationSnackbarComponent
+} from './user-registration/user-registration.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import {AppRoutingModule} from "./app-router/app-router.module";
+import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.service";
 
 
 
@@ -41,9 +50,14 @@ import {MatInputModule} from "@angular/material/input";
     StatsAggregateTableComponent,
     StatsAggregateLinechartComponent,
     ExercisesComponent,
-    ExerciseExecutionsComponent
+    ExerciseExecutionsComponent,
+    UserLoginComponent,
+    UserRegistrationComponent,
+    UserRegistrationSnackbarComponent,
+    HomePageComponent
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -52,6 +66,7 @@ import {MatInputModule} from "@angular/material/input";
     ChartsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
+    AngularFireAuthModule,
     AngularFirestoreModule,
     MaterialModule,
     MatNativeDateModule,
@@ -66,8 +81,10 @@ import {MatInputModule} from "@angular/material/input";
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
     ExerciseDataService,
     AngularFirestore,
+    AngularFireAuth,
     UserService,
     AuthService,
+    GoogleAnalyticsEventsService
   ],
   bootstrap: [AppComponent]
 })

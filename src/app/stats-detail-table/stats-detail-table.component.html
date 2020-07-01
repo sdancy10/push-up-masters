@@ -1,6 +1,3 @@
-
-
-
 <mat-expansion-panel [disabled]="true">
   <mat-expansion-panel-header>
     <mat-panel-title>
@@ -13,7 +10,6 @@
               (click)="openDialog('Add',{})" >Add New</button>
     </mat-panel-description>
   </mat-expansion-panel-header>
-
 </mat-expansion-panel>
 <table mat-table [dataSource]="splicedData" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
   <ng-container *ngFor="let column of displayedColumns;" [matColumnDef]="column.name" >

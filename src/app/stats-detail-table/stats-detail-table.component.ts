@@ -47,6 +47,7 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
           ...e.payload.doc.data()
         } as ExerciseExecution;
       }));
+      this.data.data.sort((a,b)=> (a.creationDate < b.creationDate) ? 1:-1)
       this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
     });
     this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]

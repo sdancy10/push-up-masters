@@ -1,0 +1,63 @@
+<div class="home">
+  <mat-toolbar>
+    <span>Registration</span>
+  </mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="start center">
+
+    <mat-card class="my-card full-width">
+      <mat-card-content>
+        <form [formGroup]="registrationForm" (ngSubmit)="register()">
+          <mat-form-field class="full-width">
+            <mat-label>First Name</mat-label>
+            <input  matInput formControlName="firstName" placeholder="First name"  name="fname"  required>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Last Name</mat-label>
+            <input  matInput formControlName="lastName" placeholder="Last Name" name="lname"  required>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Address</mat-label>
+            <input  matInput formControlName="address" placeholder="Address" name="address"  required>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input  matInput formControlName="email" placeholder="Email" name="email">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-hint *ngIf="!passwordControl.value">Enter your password</mat-hint>
+          </mat-form-field>
+          <br/>
+          <section class="example-section">
+            <label class="full-width">Gender:</label>
+            <mat-radio-group formControlName="gender">
+              <mat-radio-button class="example-margin" value="Male">Male</mat-radio-button>
+              <mat-radio-button class="example-margin" value="Female">Female</mat-radio-button>
+              <mat-radio-button class="example-margin" value="Other">Other</mat-radio-button>
+            </mat-radio-group>
+          </section>
+          <br/>
+          <mat-form-field class="full-width">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput formControlName="dateOfBirth" [matDatepicker]="picker" placeholder="Choose a date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button (click)="register()" color="primary">REGISTER</button>
+        <button mat-raised-button (click)="goHome()" color="primary">CANCEL</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+
+
+<div *ngIf="error" class="alert alert-warning" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  {{error}}
+</div>

@@ -1,11 +1,16 @@
+import {firestore} from "firebase";
+
 export interface User {
     uid?: string;
+    gender?: string;
+    dateOfBirth?: firestore.Timestamp;
+    displayName?: string;
     firstName?: string;
     lastName?: string;
     createBy?: string;
-    createDate?: string;
+    createDate?: firestore.Timestamp;
     lastUpdateBy?: string;
-    lastUpdateDate?: string;
+    lastUpdateDate?: firestore.Timestamp;
     contactInformation?: ContactInformation;
     roles?: Roles;
     isAnonymous?: boolean;
@@ -17,7 +22,7 @@ export interface Roles {
     admin?: boolean;
  }
 export interface ContactInformation {
-  id: string;
+  address?: string;
   homePhoneNumber?: string;
   cellPhoneNumber?: string;
   workPhoneNumber?: string;
@@ -26,10 +31,11 @@ export interface ContactInformation {
   emailVerified?: boolean;
   facebook?: string;
   twitter?: string;
-  instragram?: string;
+  instagram?: string;
   linkedin?: string;
+  tiktok?: string;
   createBy?: string;
-  createDate?: string;
+  createDate?: firestore.Timestamp;
   lastUpdateBy?: string;
-  lastUpdateDate?: string;
+  lastUpdateDate?: firestore.Timestamp;
 }
