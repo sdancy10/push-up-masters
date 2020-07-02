@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, INJECTOR, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -7,6 +7,7 @@ import {ContactInformation, Roles, User} from "../interfaces/user";
 import {firestore} from "firebase";
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatSnackBarConfig} from "@angular/material/snack-bar";
+import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-user-registration',
@@ -40,12 +41,13 @@ export class UserRegistrationComponent {
       }
     );
   }
-  openSnackBar(message: string, action: string) {
+  openSnackBar(message: string, action: string, success: boolean) {
     let config = new MatSnackBarConfig();
+    config.data = {message,action}
     config.duration = 4000
-    config.panelClass = ['snackbar-pass']
-    this._snackBar.open(message, action, config);
-    this._snackBar.
+    if (success) config.panelClass = 'snackbar-pass'
+    else config.panelClass = 'snackbar-fail'
+    this._snackBar.openFromComponent(UserRegistrationSnackbarComponent,config);
   }
 
 
@@ -67,10 +69,10 @@ export class UserRegistrationComponent {
       displayName: firstName + " " + lastName,
       firstName: firstName,
       lastName: lastName,
-      createBy: null,
-      createDate: null,
-      lastUpdateBy: null,
-      lastUpdateDate: null,
+      createBy: firstName + " " + lastName,
+      createDate: firestore.Timestamp.now(),
+      lastUpdateBy: firstName + " " + lastName,
+      lastUpdateDate: firestore.Timestamp.now(),
       contactInformation: {
         address: address,
         email: email,
@@ -95,9 +97,9 @@ export class UserRegistrationComponent {
     }
     this.afService.emailSignUp(email, password,userProps).then( response => {
       if (response === true) {
-        this.openSnackBar("SUCCESS:","Registration completed succesfully.")
+        this.openSnackBar("Registration completed succesfully.","Dismiss",true)
         this.router.navigate([''])
-      } else this.openSnackBar("ERROR: ",response.message);
+      } else this.openSnackBar(response.message,"Dismiss",false);
     }).catch((error) => {
       this.error = error;
       console.log(this.error);
@@ -110,12 +112,30 @@ export class UserRegistrationComponent {
 
 }
 @Component({
-  selector: 'snack-bar-component-snack',
-  templateUrl: 'snack-bar-component-snack.html',
-  styles: [`
-    .example-pizza-party {
-      color: green;
-    }
-  `],
+  selector: 'snack-bar-custom-component',
+  templateUrl: 'snack-bar-custom-component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'user-registration-snackbar',
+  }
 })
-export class UserRegistrationSnackbarComponent {}
+export class UserRegistrationSnackbarComponent {
+  /** Data that was injected into the snack bar. */
+  data: {message: string, action: string};
+  constructor(
+    public snackBarRef: MatSnackBarRef<UserRegistrationSnackbarComponent>,
+    @Inject(MAT_SNACK_BAR_DATA) data: any) {
+     this.data = data;
+    }
+   /** Performs the action on the snack bar. */
+  action(): void {
+    this.snackBarRef.dismissWithAction();
+  }
+
+  /** If the action button should be shown. */
+  get hasAction(): boolean {
+    return !!this.data.action;
+  }
+   
+}

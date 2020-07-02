@@ -283,10 +283,3 @@ svg#clouds {
     visibility: hidden;
   }
 }
-
-::ng-deep  .snackbar-pass {
-  background: #5cb85c !important;
-}
-::ng-deep  .snackbar-fail {
-  background: #ac2925;
-}

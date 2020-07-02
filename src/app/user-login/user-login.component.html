@@ -1,3 +1,3 @@
 <a mat-button *ngIf="!authService.authenticated" (click)="googleLogin()">Login</a>
 <a mat-button routerLink="/register" *ngIf="!authService.authenticated">Register</a>
-<a mat-button *ngIf="authService.authenticated" (click)="signOut()">Sign Out ({{authService.currentUserDisplayName}})</a>
+<a mat-button *ngIf="authService.authenticated" (click)="signOut()">Sign Out ({{authService.user.firstName}} {{authService.user.lastName}} {{authService.user.displayName}} )</a>

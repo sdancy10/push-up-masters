@@ -76,7 +76,7 @@ import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.s
     MatTableModule,
     MatPaginatorModule,
   ],
-  entryComponents: [DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent],
+  entryComponents: [DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent, UserRegistrationSnackbarComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
     ExerciseDataService,
