@@ -89,7 +89,7 @@ get currentUserDisplayName(): string {
       .then((credential) =>  {
         this.userCredential = credential
         this.user = credential.user
-          this.updateUserData(this.user)
+        this.updateUserData(this.user)
       })
       .catch(error => console.log(error));
   }
@@ -177,6 +177,17 @@ get currentUserDisplayName(): string {
     }
 
   //// Helpers ////
+    private clean(obj) {
+      for (var propName in obj) { 
+        if (obj[propName] === null || obj[propName] === undefined || obj[propName] === '') {
+          delete obj[propName];
+        } else if (typeof obj[propName] === "object") {
+          // Recurse here if the property is another object.
+          this.clean(obj[propName])
+        }
+      }
+      return obj;
+    }
 
     // determines if user has matching role
     private checkAuthorization(user: User, allowedRoles: string[]): boolean {
@@ -192,41 +203,46 @@ get currentUserDisplayName(): string {
   private updateUserData(user) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${this.user.uid}`);
+    user.contactInformation == undefined ? user.contactInformation = {} : ""
+    user.roles == undefined ? user.roles = {} : ""
+    user.gender == undefined? user.gender = "" : ""
+    user.dateOfBirth == undefined? user.dateOfBirth = "" : ""
+
     console.log(user)
     const data: User = {
       uid: user.uid,
-      displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : user.firstName + user.lastName,
-      firstName: user.displayName !== null && user.displayName !== undefined ? user.displayName.split(" ")[0] : user.firstName,
-      lastName: user.displayName !== null && user.displayName !== undefined ? user.displayName.split(" ")[1] : user.lastName,
+      displayName: user.displayName !== null && user.displayName !== undefined ? user.displayName : user.firstName + " " + user.lastName,
+      firstName: user.firstName !== null && user.firstName !== undefined ? user.firstName : user.displayName.split(" ")[0],
+      lastName: user.lastName !== null && user.lastName !== undefined ? user.lastName : user.displayName.split(" ")[1],
       photoUrl: user.photoURL,
       gender: user.gender,
       dateOfBirth: user.dateOfBirth,
       isAnonymous: user.isAnonymous,
       contactInformation: {
-        address: user.contactInformation.address,
-        email: user.contactInformation.email,
-        emailVerified: user.contactInformation.emailVerified,
-        cellPhoneNumber: user.contactInformation.cellPhoneNumber,
-        homePhoneNumber: user.contactInformation.homePhoneNumber,
-        workPhoneNumber: user.contactInformation.workPhoneNumber,
-        primaryContactMethod: user.contactInformation.primaryContactMethod,
-        facebook: user.contactInformation.facebook,
-        twitter: user.contactInformation.twitter,
-        instagram: user.contactInformation.instagram,
-        linkedin: user.contactInformation.linkedin,
-        tiktok: user.contactInformation.tiktok,
-        createBy: user.contactInformation.createBy,
-        createDate: user.contactInformation.createDate,
-        lastUpdateBy: this.userCredential.user.displayName,
+        address: user.contactInformation.address !== null && user.contactInformation.address !== undefined ? user.contactInformation.address : null,
+        email: user.contactInformation.email !== null && user.contactInformation.email !== undefined ? user.contactInformation.email : user.email,
+        emailVerified: user.contactInformation.emailVerified !== null && user.contactInformation.emailVerified !== undefined ? user.contactInformation.emailVerified : user.emailVerified,
+        cellPhoneNumber: user.contactInformation.cellPhoneNumber !== null && user.contactInformation.cellPhoneNumber !== undefined ? user.contactInformation.cellPhoneNumber : null,
+        homePhoneNumber: user.contactInformation.homePhoneNumber !== null && user.contactInformation.homePhoneNumber !== undefined ? user.contactInformation.homePhoneNumber : null,
+        workPhoneNumber: user.contactInformation.workPhoneNumber !== null && user.contactInformation.workPhoneNumber !== undefined ? user.contactInformation.workPhoneNumber : null,
+        primaryContactMethod: user.contactInformation.primaryContactMethod !== null && user.contactInformation.primaryContactMethod !== undefined ? user.contactInformation.primaryContactMethod : null,
+        facebook: user.contactInformation.facebook !== null && user.contactInformation.facebook !== undefined ? user.contactInformation.facebook : null,
+        twitter: user.contactInformation.twitter !== null && user.contactInformation.twitter !== undefined ? user.contactInformation.twitter : null,
+        instagram: user.contactInformation.instagram !== null && user.contactInformation.instagram !== undefined ? user.contactInformation.instagram : null,
+        linkedin: user.contactInformation.linkedin !== null && user.contactInformation.linkedin !== undefined ? user.contactInformation.linkedin : null,
+        tiktok: user.contactInformation.tiktok !== null && user.contactInformation.tiktok !== undefined ? user.contactInformation.tiktok : null,
+        createBy: user.contactInformation.createBy !== null && user.contactInformation.tiktok !== undefined ? user.contactInformation.createBy : user.displayName,
+        createDate: user.contactInformation.createDate !== null && user.contactInformation.createDate !== undefined ? user.contactInformation.createDate : firestore.Timestamp.now(),
+        lastUpdateBy: user.displayName !== null && user.displayName !== undefined ? user.displayName : user.firstName + " " + user.lastName,
         lastUpdateDate: firestore.Timestamp.now()
       },
       roles: {
-        subscriber: false,
-        editor: false,
-        admin: false
+        subscriber: user.roles.subscriber !== null && user.roles.subscriber !== null ? user.roles.subscriber : false,
+        editor: user.roles.editor !== null && user.roles.editor !== null ? user.roles.editor : false,
+        admin: user.roles.admin !== null && user.roles.admin !== null ? user.roles.admin : false
       }
     }
-    return userRef.set(data, { merge: true })
+    return userRef.set(this.clean(data), { merge: true })
     //return userRef.set(Object.assign({},data), { merge: true })
   }
 
