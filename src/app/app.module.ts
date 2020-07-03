@@ -28,7 +28,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {UserService} from "./services/user-service.service";
 import {AuthService} from "./services/auth.service";
 import {MatInputModule} from "@angular/material/input";
-import { UserLoginComponent } from './user-login/user-login.component';
+import { UserSignInComponent } from './user-sign-in/user-sign-in.component';
 import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/auth";
 import {
   UserRegistrationComponent,
@@ -37,6 +37,7 @@ import {
 import { HomePageComponent } from './home-page/home-page.component';
 import {AppRoutingModule} from "./app-router/app-router.module";
 import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.service";
+import { DialogSignInComponent } from './dialog-sign-in/dialog-sign-in.component';
 
 
 
@@ -51,10 +52,12 @@ import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.s
     StatsAggregateLinechartComponent,
     ExercisesComponent,
     ExerciseExecutionsComponent,
-    UserLoginComponent,
+    UserSignInComponent,
+    DialogSignInComponent,
     UserRegistrationComponent,
     UserRegistrationSnackbarComponent,
-    HomePageComponent
+    HomePageComponent,
+    DialogSignInComponent
   ],
   imports: [
     AppRoutingModule,
@@ -76,7 +79,7 @@ import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.s
     MatTableModule,
     MatPaginatorModule,
   ],
-  entryComponents: [DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent, UserRegistrationSnackbarComponent],
+  entryComponents: [DialogSignInComponent, DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent, UserRegistrationSnackbarComponent],
   providers: [
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
     ExerciseDataService,

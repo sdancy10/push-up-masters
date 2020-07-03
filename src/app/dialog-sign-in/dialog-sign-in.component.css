@@ -1,0 +1,21 @@
+.spacer {
+    flex: 1 1 auto;
+  }
+  .toolbar {
+    height: 60px;
+    margin: -8px;
+    display: flex;
+    align-items: center;
+    background-color: #1976d2;
+    color: white;
+    font-weight: 600;
+  }
+  .sign-in-button {
+    background-color: #1976d2;
+    color: white;
+  }
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+}
