@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
 export class DialogSignInComponent implements OnInit {
   action:string;
   local_data: any;
-  hide: true;
+  hide: boolean;
   signInForm: FormGroup;
   usernameFormControl = new FormControl('',[Validators.required]);
   passwordFormControl = new FormControl('',[Validators.required]);
@@ -23,6 +23,7 @@ export class DialogSignInComponent implements OnInit {
     private formBuilder: FormBuilder,
     public authService: AuthService,)
      {
+      this.hide = true;
       this.local_data = {... data};
       this.action = this.local_data.action;
      }
@@ -37,14 +38,14 @@ export class DialogSignInComponent implements OnInit {
     );
   }
   anonymousSignIn() {
-    this.authService.anonymousLogin().then((data) => {
+    this.authService.anonymousSignIn().then((data) => {
       if (this.authService.authenticated) {
         this.closeDialog('signin-success');
       }
     });
   }
   googleSignIn() {
-    this.authService.googleLogin().then((data) => {
+    this.authService.googleSignIn().then((data) => {
       if (this.authService.authenticated) {
         console.warn(this.authService)
         this.closeDialog('signin-success')
@@ -55,7 +56,7 @@ export class DialogSignInComponent implements OnInit {
     if (this.signInForm.invalid) {
       return;
     }
-    this.authService.emailLogin(this.usernameFormControl.value,this.passwordFormControl.value).then((data) => {
+    this.authService.emailSignIn(this.usernameFormControl.value,this.passwordFormControl.value).then((data) => {
       if (this.authService.authenticated) {
         console.warn(this.authService)
         this.closeDialog('signin-success')

@@ -12,7 +12,7 @@ export class UserService {
   private filter = '';
   private userCount = 0;
 
-  constructor(private db: AngularFirestore, private auth: AuthService) {
+  constructor(private db: AngularFirestore) {
 
     this.usersCollection = db.collection('/users');
     this.users = this.usersCollection.valueChanges.toString();
@@ -35,6 +35,10 @@ export class UserService {
       }
     );
     return this.usersList;
+  }
+
+  public getUser(uid: string) {
+    return this.db.collection<User>("users",ref=>ref.where("uid","==",uid)).snapshotChanges();
   }
 
   public addUser(): void {

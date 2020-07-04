@@ -1,32 +1,29 @@
-<h4 mat-dialog-title>
-    <mat-toolbar class="toolbar" role="banner">
-        <mat-toolbar-row >
-                <span>Sign In</span>
-                <span class="spacer"></span>
-                <button mat-button (click)="closeDialog()" mat-flat-button color="warn"><strong>X</strong></button>
-        </mat-toolbar-row>
-    </mat-toolbar>
-</h4>
-<div mat-dialog-content>
-    <mat-card-content>
-        <form [formGroup]="signInForm" (ngSubmit)="signin()">
-            <mat-form-field>
-                <mat-label>Username/Email</mat-label>
-                <input matInput formControlName="username" placeholder="Username/Email" required> 
-            </mat-form-field>
-            <mat-form-field>
-                    <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password" required>
-                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    <mat-hint *ngIf="!password">Enter your password</mat-hint>
-            </mat-form-field>
-        </form>        
-    </mat-card-content>
-</div>    
-<mat-dialog-actions layout="row" > 
+<mat-toolbar class="toolbar" mat-dialog-title>
+    <span>Sign In</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn"><strong>X</strong></button>
+</mat-toolbar>
+
+
+<form [formGroup]="signInForm" (ngSubmit)="signin()">
+    <mat-form-field>
+        <mat-label>Username/Email</mat-label>
+        <input matInput formControlName="username" placeholder="Username/Email" required> 
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-hint *ngIf="!password">Enter your password</mat-hint>
+    </mat-form-field>
+</form>        
+
+   
+<div mat-dialog-actions layout="row" > 
     <a  href="">Forgot your password?</a>
     <span class="spacer"></span>
     <button class="sign-in-button" mat-button (click)="emailSignIn()" mat-flat-button>Sign In</button>
-</mat-dialog-actions>
+</div>
 
 <div class="center">
         <button mat-button mat-flat-button (click)="googleSignIn()">
