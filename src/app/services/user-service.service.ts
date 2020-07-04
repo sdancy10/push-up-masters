@@ -41,7 +41,7 @@ export class UserService {
     return this.db.collection<User>("users",ref=>ref.where("uid","==",uid)).snapshotChanges();
   }
 
-  public addUser(): void {
+ /* public addUser(): void {
     this.db.collection("users").doc(this.auth.currentUserId).set({
       createBy: "TestCreate",
       createDate: "Date Today",
@@ -52,6 +52,6 @@ export class UserService {
       userId: "test"
 
     })
-  }
+  }*/
 
 }
