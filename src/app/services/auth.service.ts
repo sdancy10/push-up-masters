@@ -6,6 +6,7 @@ import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firest
 import { User } from "../interfaces/user";
 import UserCredential = firebase.auth.UserCredential;
 import {firestore} from "firebase";
+import { UserService } from './user-service.service';
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth,
               private db: AngularFirestore,
+              private userService: UserService,
               private router:Router)
               {
                   this.afAuth.authState.subscribe( (user) =>
@@ -64,22 +66,22 @@ get currentUserDisplayName(): string {
 
   //// Social Auth ////
 
-  githubLogin() {
+  githubSignIn() {
     const provider = new firebase.auth.GithubAuthProvider()
     return this.socialSignIn(provider);
   }
 
-  googleLogin() {
+  googleSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider()
     return this.socialSignIn(provider);
   }
 
-  facebookLogin() {
+  facebookSignIn() {
     const provider = new firebase.auth.FacebookAuthProvider()
     return this.socialSignIn(provider);
   }
 
-  twitterLogin(){
+  twitterSignIn(){
     const provider = new firebase.auth.TwitterAuthProvider()
     return this.socialSignIn(provider);
   }
@@ -88,7 +90,14 @@ get currentUserDisplayName(): string {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) =>  {
         this.userCredential = credential
-        this.user = credential.user
+        let users: User[];
+        this.userService.getUser(this.userCredential.user.uid).subscribe( data => {
+           users = data.map( user =>  {
+            return user.payload.doc.data() as User;
+          }
+          );
+        users.forEach( user => {if (user.uid !== null || user.uid !== undefined) this.user = user})
+        });
         this.updateUserData(this.user)
       })
       .catch(error => console.log(error));
@@ -97,7 +106,7 @@ get currentUserDisplayName(): string {
 
   //// Anonymous Auth ////
 
-  anonymousLogin() {
+  anonymousSignIn() {
     return this.afAuth.auth.signInAnonymously()
     .then((credential) => {
       this.userCredential = credential
@@ -129,12 +138,19 @@ get currentUserDisplayName(): string {
       });
   }
 
-  emailLogin(email:string, password:string) {
+  emailSignIn(email:string, password:string) {
      return this.afAuth.auth.signInWithEmailAndPassword(email, password)
        .then((userCredential) => {
-         this.userCredential = userCredential
-         this.user = userCredential.user
-         this.updateUserData(this.user)
+        this.userCredential = userCredential
+        let users: User[];
+        this.userService.getUser(this.userCredential.user.uid).subscribe( data => {
+           users = data.map( user =>  {
+            return user.payload.doc.data() as User;
+          }
+          );
+        users.forEach( user => {if (user.uid !== null || user.uid !== undefined) this.user = user})
+        });
+        this.updateUserData(this.user)
        })
        .catch(error => {
          console.log(error)

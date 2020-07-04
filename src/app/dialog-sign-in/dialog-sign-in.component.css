@@ -3,12 +3,18 @@
   }
   .toolbar {
     height: 60px;
-    margin: -8px;
+    margin: 0px;
     display: flex;
     align-items: center;
     background-color: #1976d2;
     color: white;
     font-weight: 600;
+  }
+  .mat-dialog-actions {
+    padding: 1em;
+  }
+  .mat-form-field {
+    width:100%;
   }
   .sign-in-button {
     background-color: #1976d2;
@@ -17,5 +23,5 @@
 .center {
   display: flex;
   justify-content: center;
-  margin-top: 2em;
+  margin-top: 1em;
 }
