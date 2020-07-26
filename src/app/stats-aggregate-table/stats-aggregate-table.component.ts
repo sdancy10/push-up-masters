@@ -1,17 +1,19 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import {ExerciseExecutionsService} from "../services/exercise-executions.service";
 import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
+import {ExerciseService} from "../services/exercise.service";
+import {Exercise} from "../interfaces/Exercise";
 
 @Component({
   selector: 'app-stats-aggregate-table',
   templateUrl: './stats-aggregate-table.component.html',
   styleUrls: ['./stats-aggregate-table.component.css']
 })
-export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
+export class StatsAggregateTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
@@ -29,20 +31,36 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
   offset = 0;
   pageSize = 5;
   pageSizeOptions = [3,5,10];
-  aggregations: {name: string, selected: boolean}[] =
+  leaderBoardTypes: {name: string, selected: boolean}[] =
     [
       {name:'All-Time', selected:true},
       {name:'User', selected:false},
       {name:'Date', selected:false}];
+  exercises: Exercise[];
+  @Input()
+  changeTrigger: number;
+  @Input()
+  selectedExercise: {
+    id: string,
+    name: string
+  }
   uatTesting: any;
 
   constructor(public dialog: MatDialog,
               private exerciseExecutionsService: ExerciseExecutionsService) {
-    this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
+    this.displayedColumns.slice().forEach(pair => this.columnsToDisplay.push(pair.name));
   }
 
   ngOnInit() {
-    this.exerciseExecutionsService.getExerciseExecutions().subscribe(data => {
+    this.getExerciseExecutionData(this.selectedExercise.id)
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.getExerciseExecutionData(this.selectedExercise.id)
+  }
+
+  getExerciseExecutionData(exerciseId: string) {
+    this.exerciseExecutionsService.getExerciseExecutions(exerciseId).subscribe(data => {
       this.data = new MatTableDataSource<ExerciseExecution>(data.map(e => {
         return {
           id: e.payload.doc.id,
@@ -63,10 +81,12 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
   }
 
   setAggregation(selectedAggregation: string): void{
-    this.aggregations.forEach( agg => {
+    this.leaderBoardTypes.forEach(agg => {
       agg.name == selectedAggregation ? agg.selected = true : agg.selected = false;
     });
   }
+
+
 
   pageChangeEvent(event: PageEvent) {
     const offset = ((event.pageIndex + 1) - 1) * event.pageSize;
@@ -92,19 +112,19 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit {
   }
 
   test() {
-    this.exerciseExecutionsService
-      .getExerciseExecutionsByUser('Shane', 'D3ZYs2LBx10eDegpQxzo').subscribe(
-      data => this.uatTesting = new MatTableDataSource<ExerciseExecution>(
-        data.map(e => {
-          return {
-            id: e.payload.doc.id,
-            ...e.payload.doc.data()
-          } as ExerciseExecution;
-        }))
-    );
-    console.warn(
-      this.uatTesting
-    )
+    // this.exerciseExecutionsService
+    //   .getExerciseExecutionsByUser('Shane', 'D3ZYs2LBx10eDegpQxzo').subscribe(
+    //   data => this.uatTesting = new MatTableDataSource<ExerciseExecution>(
+    //     data.map(e => {
+    //       return {
+    //         id: e.payload.doc.id,
+    //         ...e.payload.doc.data()
+    //       } as ExerciseExecution;
+    //     }))
+    // );
+    // console.warn(
+    //   this.uatTesting
+    // )
   }
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {

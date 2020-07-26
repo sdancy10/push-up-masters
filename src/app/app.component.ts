@@ -17,6 +17,7 @@ export class AppComponent {
       }
     });
   }
+
   ngOnInit(): void {
   }
   submitGoogleAnalyticsEvent(category: string, action: string, label: string, value: number) {

@@ -19,15 +19,35 @@
 
 <div class="card-container">
   <div class="card highlight-card card-small">
-    <h2>Results Summary</h2>
+    <h2>{{selectedExercise.name}} - Results Summary</h2>
   </div>
 </div>
+<mat-expansion-panel [disabled]="true">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Select Exercise...
+    </mat-panel-title>
+    <mat-panel-description>
+      <button mat-button [matMenuTriggerFor]="menu2">
+        <ng-container *ngFor="let e of exercises">
+          <p *ngIf="e.selected"><b>{{e.exerciseName}}</b></p>
+        </ng-container>
+      </button>
+      <mat-menu #menu2="matMenu">
+        <ng-container *ngFor="let e of exercises">
+          <button mat-menu-item (click)="setExercise(e.exerciseName)">{{e.exerciseName}}</button>
+        </ng-container>
+      </mat-menu>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+</mat-expansion-panel>
+
 <div class="card-container">
-  <app-stats-aggregate-table></app-stats-aggregate-table>
+  <app-stats-aggregate-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-table>
+</div>
+<div class="card-container" >
+  <app-stats-aggregate-linechart [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-linechart>
 </div>
 <div class="card-container">
-  <app-stats-aggregate-linechart></app-stats-aggregate-linechart>
-</div>
-<div class="card-container">
-  <app-stats-table></app-stats-table>
+  <app-stats-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-table>
 </div>

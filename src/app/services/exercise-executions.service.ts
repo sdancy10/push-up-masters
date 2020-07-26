@@ -4,6 +4,7 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import * as firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 import WhereFilterOp = firebase.firestore.WhereFilterOp;
+import {User} from "../interfaces/user";
 
 
 @Injectable({
@@ -32,12 +33,22 @@ export class ExerciseExecutionsService {
     ).snapshotChanges();
   }
 
-  getExerciseExecutions() {
-    return this.firestore.collection('exercise-executions',
-      ref =>
-        ref.orderBy('creationDate')
-          .orderBy('set')
-    ).snapshotChanges();
+  getExerciseExecutions(exerciseId: string) {
+    //Get all exercise executions else only retrieve specified exercise
+    let allExercisesId = '4xUF196dzjSTe5qvwqtM'
+    if (exerciseId == allExercisesId)
+      return this.firestore.collection('exercise-executions',
+        ref =>
+          ref.orderBy('creationDate')
+            .orderBy('set')
+      ).snapshotChanges();
+    else
+      return this.firestore.collection<ExerciseExecution>('exercise-executions',
+        ref =>
+          ref.where("exerciseId","==",exerciseId)
+            .orderBy('creationDate')
+            .orderBy('set')
+      ).snapshotChanges();
   }
 
   createExercise(exerciseExecution: ExerciseExecution) {

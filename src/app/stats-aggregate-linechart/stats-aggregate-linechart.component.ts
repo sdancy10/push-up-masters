@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
@@ -10,7 +10,7 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
   templateUrl: './stats-aggregate-linechart.component.html',
   styleUrls: ['./stats-aggregate-linechart.component.css']
 })
-export class StatsAggregateLinechartComponent implements OnInit {
+export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
   public lineChartData: ChartDataSets[] = [{ data: [] }];
   public lineChartLabels: Label[] = [];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
@@ -84,13 +84,21 @@ export class StatsAggregateLinechartComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartPlugins = [pluginAnnotations];
   public exerciseData: ExerciseExecution[];
+  @Input()
+  changeTrigger: number;
+  @Input()
+  selectedExercise: {
+    id: string,
+    name: string
+  }
 
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   constructor(private exerciseService: ExerciseExecutionsService) {}
 
   ngOnInit() {
-    this.exerciseService.getExerciseExecutions().subscribe(data => {
+
+    this.exerciseService.getExerciseExecutions(this.selectedExercise.id).subscribe(data => {
       this.exerciseData = data.map(e => {
         return {
           id: e.payload.doc.id,
@@ -112,6 +120,10 @@ export class StatsAggregateLinechartComponent implements OnInit {
         this[idx] = "Day " + (idx + 1).toString();
       },this.lineChartLabels);
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.ngOnInit()
   }
 
   public randomize(): void {

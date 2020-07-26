@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnInit, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, OnInit, AfterViewInit, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { MatTableDataSource, MatSort, MatPaginator} from "@angular/material";
 
@@ -7,13 +7,14 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import {DialogBoxExerciseExecutionComponent} from "../dialog-box-exercise-execution/dialog-box-exercise-execution.component";
 import {Sort} from "@angular/material/sort";
 import {PageEvent} from "@angular/material/paginator";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-stats-table',
   templateUrl: './stats-detail-table.component.html',
   styleUrls: ['./stats-detail-table.component.css']
 })
-export class StatsDetailTableComponent implements OnInit,AfterViewInit {
+export class StatsDetailTableComponent implements OnInit,AfterViewInit, OnChanges {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
@@ -24,10 +25,17 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
   offset = 0;
   pageSize = 5;
   pageSizeOptions = [3,5,10];
-
+  @Input()
+  changeTrigger: number;
+  @Input()
+  selectedExercise: {
+    id: string,
+    name: string
+  }
 
   constructor(public dialog: MatDialog,
-              private exerciseExecutionService: ExerciseExecutionsService) { }
+              private exerciseExecutionService: ExerciseExecutionsService,
+              public authService: AuthService) { }
 
   ngOnInit() {
     this.data = new MatTableDataSource<ExerciseExecution>();
@@ -39,8 +47,20 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
       ,{key:'Edit', name:'Edit'}
       ];
     this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
+    this.getExerciseExecutions()
+    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    this.getExerciseExecutions()
+  }
 
-    this.exerciseExecutionService.getExerciseExecutions().subscribe(data => {
+  ngAfterViewInit(): void {
+    this.data.sort = this.sort;
+    this.data.paginator = this.paginator;
+    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.filteredData.length]
+  }
+  getExerciseExecutions() {
+    this.exerciseExecutionService.getExerciseExecutions(this.selectedExercise.id).subscribe(data => {
       this.data = new MatTableDataSource(data.map(e => {
         return {
           id: e.payload.doc.id,
@@ -50,13 +70,6 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit {
       this.data.data.sort((a,b)=> (a.creationDate < b.creationDate) ? 1:-1)
       this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
     });
-    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]
-  }
-
-  ngAfterViewInit(): void {
-    this.data.sort = this.sort;
-    this.data.paginator = this.paginator;
-    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.filteredData.length]
   }
 
   applyFilter(event: Event) {

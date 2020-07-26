@@ -35,7 +35,7 @@ export class ExerciseExecutionsComponent implements OnInit {
 
 
 
-    this.exerciseExecutionsService.getExerciseExecutions().subscribe(data => {
+    this.exerciseExecutionsService.getExerciseExecutions('all').subscribe(data => {
       this.exerciseExecutions = data.map(e => {
         return {
           id: e.payload.doc.id,
