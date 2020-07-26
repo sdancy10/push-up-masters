@@ -1,17 +1,17 @@
-<button (click)="test()"></button>
+<button *ngIf="uatTesting" (click)="test()"></button>
 <mat-expansion-panel [disabled]="true">
   <mat-expansion-panel-header>
     <mat-panel-title>
       <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
     </mat-panel-title>
     <mat-panel-description>
-      <button mat-button [matMenuTriggerFor]="menu">
-        <ng-container *ngFor="let agg of aggregations">
-          <p *ngIf="agg.selected">Leader-Board Type - <b>{{agg.name}}</b></p>
+      <button mat-button [matMenuTriggerFor]="menu2">
+        <ng-container *ngFor="let agg of leaderBoardTypes">
+          <p *ngIf="agg.selected"><b>{{agg.name}}</b></p>
         </ng-container>
       </button>
-      <mat-menu #menu="matMenu">
-        <ng-container *ngFor="let agg of aggregations">
+      <mat-menu #menu2="matMenu">
+        <ng-container *ngFor="let agg of leaderBoardTypes">
           <button mat-menu-item (click)="setAggregation(agg.name)">{{agg.name}}</button>
         </ng-container>
       </mat-menu>
