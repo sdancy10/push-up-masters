@@ -12,7 +12,7 @@ import {AuthService} from "../services/auth.service";
 @Component({
   selector: 'app-stats-table',
   templateUrl: './stats-detail-table.component.html',
-  styleUrls: ['./stats-detail-table.component.css']
+  styleUrls: ['./stats-detail-table.component.scss']
 })
 export class StatsDetailTableComponent implements OnInit,AfterViewInit, OnChanges {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -30,7 +30,7 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit, OnChange
   @Input()
   selectedExercise: {
     id: string,
-    name: string
+    exerciseName: string
   }
 
   constructor(public dialog: MatDialog,

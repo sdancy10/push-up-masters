@@ -7,11 +7,11 @@ import { DialogSignInComponent } from '../dialog-sign-in/dialog-sign-in.componen
 @Component({
   selector: 'app-user-sign-in',
   templateUrl: './user-sign-in.component.html',
-  styleUrls: ['./user-sign-in.component.css']
+  styleUrls: ['./user-sign-in.component.scss']
 })
 export class UserSignInComponent implements OnInit {
   constructor(public authService: AuthService,
-              private router:Router, 
+              private router:Router,
               public dialog: MatDialog) { }
 
   ngOnInit() {  }
@@ -27,7 +27,7 @@ export class UserSignInComponent implements OnInit {
      //do nothing
     });
   }
- 
+
   signOut() {
     this.authService.signOut()
     this.router.navigate(['']);

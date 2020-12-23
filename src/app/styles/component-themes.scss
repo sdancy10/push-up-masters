@@ -1,0 +1,14 @@
+@import '../home-page/home-page.component';
+@import '../stats-aggregate-table/stats-aggregate-table.component';
+@import '../exercise-analytics-page/exercise-analytics-page.component';
+@import '../app.component';
+@import '../stats-detail-table/stats-detail-table.component';
+
+
+@mixin component-themes($theme) {
+  @include home-theme($theme);
+  @include app-leaderboard-table-theme($theme);
+  @include app-main-theme($theme);
+  @include app-analytics-page($theme);
+  @include app-detail-table-theme($theme);
+}

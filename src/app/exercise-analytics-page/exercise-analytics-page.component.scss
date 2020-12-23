@@ -1,0 +1,32 @@
+@import '~@angular/material/theming';
+
+@mixin app-analytics-page($theme) {
+  $accent: map-get($theme, accent);
+  $background: map-get($theme, background);
+  $background-color: mat-color($accent, card);
+
+  .mat-tab-labels :last-child.mat-tab-label {
+    min-width: 0;
+    padding: 0 12px;
+    color: mat-color($accent);
+    opacity: 1;
+  }
+
+
+
+  .panel {
+    //padding: 24px;
+    //border: 10px solid black;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: -8px;
+    flex: 0 0 50%; /** required to make sure that elements take 50% width no matter whether they can grow or shrink.*/
+    width:  90vw; /** we are telling elements to size themselves */
+    max-width: 968px;
+    -webkit-box-flex: 0;
+    box-sizing: border-box; /** is required to achieve correct size calculations otherwise all those margins/paddings mess things up */
+  }
+
+}
+
+

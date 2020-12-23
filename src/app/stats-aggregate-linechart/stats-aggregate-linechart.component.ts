@@ -8,7 +8,7 @@ import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 @Component({
   selector: 'app-stats-aggregate-linechart',
   templateUrl: './stats-aggregate-linechart.component.html',
-  styleUrls: ['./stats-aggregate-linechart.component.css']
+  styleUrls: ['./stats-aggregate-linechart.component.scss']
 })
 export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
   public lineChartData: ChartDataSets[] = [{ data: [] }];
@@ -89,9 +89,9 @@ export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
   @Input()
   selectedExercise: {
     id: string,
-    name: string
+    exerciseName: string
   }
-
+  public lineChartMaxLen = 0;
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   constructor(private exerciseService: ExerciseExecutionsService) {}
@@ -110,18 +110,43 @@ export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
       let lineData = this.exerciseService.getAggregateLineData(aggData, ['userId']);
       this.lineChartData = lineData;
       this.lineChartLabels = [];
-
-      this.exerciseData.forEach(label => {
-        this.lineChartLabels.push(String(label.creationDate));
+      let tmpUsers: { userId: string; createDate: string }[] = [];
+      this.exerciseData.forEach( u => {
+        let dateExists = false
+        tmpUsers.forEach( tu => {
+          if (tu.userId == u.userId && tu.createDate == String(u.creationDate)) {
+            dateExists = true
+          }
+        })
+        if (!dateExists) {
+          tmpUsers.push({userId: u.userId, createDate: String(u.creationDate)})
+        }
       });
-      this.lineChartLabels = [...new Set(this.lineChartLabels)];
-      this.lineChartLabels.forEach( function(lbl,idx)
-      {
-        this[idx] = "Day " + (idx + 1).toString();
-      },this.lineChartLabels);
+
+      let userDates = this.groupBy(tmpUsers,['userId']);
+      let maxUserDateLen = 0
+      Object.keys(userDates).forEach( k => {
+        if (userDates[k].length > maxUserDateLen) {
+          maxUserDateLen = userDates[k].length
+        }
+      })
+      for (let i = 1; i < maxUserDateLen+1; i++) {
+        this.lineChartLabels.push('Day ' + (i).toString())
+      }
+
     });
   }
-
+  private groupBy(objectArray, property) {
+    return objectArray.reduce(function (acc, obj) {
+      var key = '';
+      property.forEach(p => key += obj[p])
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(obj);
+      return acc;
+    }, {});
+  }
   ngOnChanges(changes: SimpleChanges) {
     this.ngOnInit()
   }

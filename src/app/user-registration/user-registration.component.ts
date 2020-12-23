@@ -12,7 +12,7 @@ import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material';
 @Component({
   selector: 'app-user-registration',
   templateUrl: './user-registration.component.html',
-  styleUrls: ['./user-registration.component.css']
+  styleUrls: ['./user-registration.component.scss']
 })
 export class UserRegistrationComponent {
   public error: any;
@@ -137,5 +137,5 @@ export class UserRegistrationSnackbarComponent {
   get hasAction(): boolean {
     return !!this.data.action;
   }
-   
+
 }

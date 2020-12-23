@@ -1,33 +1,34 @@
 <mat-toolbar class="toolbar" mat-dialog-title>
-    <span>Sign In</span>
-    <span class="spacer"></span>
-    <button mat-button (click)="closeDialog()" mat-flat-button color="warn"><strong>X</strong></button>
+  <span>Sign In</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="closeDialog('closed')" mat-flat-button color="warn"><strong>X</strong></button>
 </mat-toolbar>
-
-
-<form [formGroup]="signInForm" (ngSubmit)="signin()">
-    <mat-form-field>
+<mat-grid-list cols="1" rowHeight="6:1">
+  <mat-grid-tile>
+    <form [formGroup]="signInForm" (ngSubmit)="emailSignIn()">
+      <mat-form-field>
         <mat-label>Username/Email</mat-label>
-        <input matInput formControlName="username" placeholder="Username/Email" required> 
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password" required>
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-            <mat-hint *ngIf="!password">Enter your password</mat-hint>
-    </mat-form-field>
-</form>        
-
-   
-<div mat-dialog-actions layout="row" > 
-    <a  href="">Forgot your password?</a>
-    <span class="spacer"></span>
-    <button class="sign-in-button" mat-button (click)="emailSignIn()" mat-flat-button>Sign In</button>
-</div>
-
-<div class="center">
-        <button mat-button mat-flat-button (click)="googleSignIn()">
-                <img src="../assets/google_signin_buttons/web/1x/btn_google_signin_light_focus_web.png">
-        </button>
-</div>
-
+        <input matInput formControlName="username" placeholder="Username/Email" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password" required>
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <mat-hint>Enter your password</mat-hint>
+      </mat-form-field>
+    </form>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button class="sign-in-button" mat-button (click)="emailSignIn()" mat-flat-button color="accent">Sign in with E-Mail</button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div class="center">
+      <button mat-button mat-flat-button (click)="googleSignIn()">
+        <img src="../assets/google_signin_buttons/web/1x/btn_google_signin_light_focus_web.png">
+      </button>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <a href="">Forgot your password?</a>
+  </mat-grid-tile>
+</mat-grid-list>
