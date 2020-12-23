@@ -1,0 +1,33 @@
+<div class="home">
+  <mat-tab-group>
+    <mat-tab label="Performance Leaderboard">
+      <ng-template matTabContent>
+        <app-stats-aggregate-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-table>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Performance Trend">
+      <ng-template matTabContent>
+        <app-stats-aggregate-linechart [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-linechart>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Performance Detail">
+      <app-stats-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-table>
+    </mat-tab>
+    <mat-tab disabled>
+      <ng-template mat-tab-label>
+        Exercise: <b>&nbsp;{{selectedExercise.exerciseName}}</b>
+        <button class="button-" mat-icon-button [matMenuTriggerFor]="menu2" >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu2="matMenu">
+          <ng-container *ngFor="let e of exercises">
+            <button mat-menu-item (click)="setSelectedExercise(e)">{{e.exerciseName}}</button>
+          </ng-container>
+        </mat-menu>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+
+

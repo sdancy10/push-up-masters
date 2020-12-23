@@ -11,7 +11,7 @@ import {DialogBoxExerciseExecutionComponent} from "../dialog-box-exercise-execut
 @Component({
   selector: 'app-exercise-executions',
   templateUrl: './exercise-executions.component.html',
-  styleUrls: ['./exercise-executions.component.css']
+  styleUrls: ['./exercise-executions.component.scss']
 })
 export class ExerciseExecutionsComponent implements OnInit {
   exercises: Exercise[];

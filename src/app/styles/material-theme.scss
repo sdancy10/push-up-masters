@@ -1,0 +1,75 @@
+@import '~@angular/material/theming';
+@import './component-themes';
+@import './custom-theme-color-definitions';
+
+
+// Define the default theme (same as the example above).
+$app-primary: mat-palette($custom-blue);
+$app-accent:  mat-palette($custom-blue-secondary);
+$app-theme:   mat-light-theme((
+  color: (
+    primary: $app-primary,
+    accent: $app-accent,
+  )
+),$app-accent);
+
+// Define an alternate dark theme.
+$dark-theme:   mat-dark-theme((
+  color: (
+    primary: $app-primary,
+    accent: $app-accent,
+  )
+),$app-accent);
+
+//Theme options
+.app-theme {
+  @include angular-material-theme($app-theme);
+  @include component-themes($app-theme);
+}
+.dark-theme {
+  @include angular-material-theme($dark-theme);
+  @include component-themes($dark-theme);
+}
+.dark-mint-theme {
+  $dark-primary: mat-palette($dark-mint);
+  $dark-accent:  mat-palette($mint, A400, A100, A700);
+  $dark-warn:    mat-palette($mint);
+  $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+  @include angular-material-theme($dark-theme);
+  @include component-themes($dark-theme);
+}
+.light-mint-theme {
+  $light-primary: mat-palette($dark-mint);
+  $light-accent:  mat-palette($mint, A400, A100, A700);
+  $light-warn:    mat-palette($mint);
+  $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+
+  @include angular-material-theme($light-theme);
+  @include component-themes($light-theme);
+}
+.dark-grey-blue-theme {
+  $dark-primary: mat-palette($dark-grey-blue);
+  $dark-accent:  mat-palette($dark-grey-blue, A400, A100, A700);
+  $dark-warn:    mat-palette($mat-red);
+  $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+  @include angular-material-theme($dark-theme);
+  @include component-themes($dark-theme);
+}
+.light-dark-grey-blue {
+  $light-primary: mat-palette($dark-grey-blue);
+  $light-accent:  mat-palette($dark-grey-blue, A400, A100, A700);
+  $light-warn:    mat-palette($mat-red);
+  $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+
+  @include angular-material-theme($light-theme);
+  @include component-themes($light-theme);
+}
+
+// Default Theme
+@include angular-material-theme($dark-theme);
+@include component-themes($dark-theme);
+
+
+

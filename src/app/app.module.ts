@@ -8,6 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material/material.module';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import { ChartsModule } from 'ng2-charts';
+import { OverlayModule } from "@angular/cdk/overlay";
 
 import { AppComponent } from './app.component';
 import { StatsDetailTableComponent } from './stats-detail-table/stats-detail-table.component';
@@ -38,6 +39,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import {AppRoutingModule} from "./app-router/app-router.module";
 import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.service";
 import { DialogSignInComponent } from './dialog-sign-in/dialog-sign-in.component';
+import { ExerciseAnalyticsPageComponent } from './exercise-analytics-page/exercise-analytics-page.component';
 
 
 
@@ -57,7 +59,8 @@ import { DialogSignInComponent } from './dialog-sign-in/dialog-sign-in.component
     UserRegistrationComponent,
     UserRegistrationSnackbarComponent,
     HomePageComponent,
-    DialogSignInComponent
+    DialogSignInComponent,
+    ExerciseAnalyticsPageComponent
   ],
   imports: [
     AppRoutingModule,
@@ -78,6 +81,7 @@ import { DialogSignInComponent } from './dialog-sign-in/dialog-sign-in.component
     MatSortModule,
     MatTableModule,
     MatPaginatorModule,
+    OverlayModule,
   ],
   entryComponents: [DialogSignInComponent, DialogBoxExerciseComponent, DialogBoxExerciseExecutionComponent, UserRegistrationSnackbarComponent],
   providers: [

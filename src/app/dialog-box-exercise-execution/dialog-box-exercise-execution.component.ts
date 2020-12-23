@@ -19,7 +19,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-dialog-box',
   templateUrl: './dialog-box-exercise-execution.component.html',
-  styleUrls: ['./dialog-box-exercise-execution.component.css']
+  styleUrls: ['./dialog-box-exercise-execution.component.scss']
 })
 export class DialogBoxExerciseExecutionComponent implements OnInit {
   action:string;

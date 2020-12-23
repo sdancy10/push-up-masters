@@ -1,16 +1,17 @@
-<mat-expansion-panel [disabled]="true">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search...">
-    </mat-panel-title>
-    <mat-panel-description>
-      <button mat-raised-button
+<div class="toolbar">
+  <button mat-mini-fab
               color="primary"
               align-self="flex-end"
-              (click)="openDialog('Add',{})" >Add New</button>
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-</mat-expansion-panel>
+              (click)="openDialog('Add',{})" >
+    <mat-icon>add</mat-icon>
+  </button>
+  <span>&nbsp;Add Exercise</span>
+  <div class="spacer"></div>
+  <div class="spacer"><h3><b>Exercise Detail</b></h3></div>
+  <span> <mat-icon class="search-icon-center" matPrefix>search</mat-icon></span>
+  <span><input matInput (keyup)="applyFilter($event)" placeholder="Search..."></span>
+</div>
+
 <table mat-table [dataSource]="splicedData" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
   <ng-container *ngFor="let column of displayedColumns;" [matColumnDef]="column.name" >
     <ng-template [ngIf]="column.name !== 'Edit'">
@@ -25,8 +26,29 @@
       <p *ngIf="column.key != 'creationDate' && column.key != 'Edit'">{{element[column.key]}}</p>
       <p *ngIf="column.key == 'creationDate'">{{element[column.key].seconds * 1000 | date:'MM/dd/yyyy'}}</p>
       <div *ngIf="column.key == 'Edit' && authService.authenticated" class="action-link" >
-        <button mat-raised-button (click)="openDialog('Update',element)">Edit</button>
-        <button mat-raised-button (click)="openDialog('Delete',element)">Delete</button>
+        <button mat-icon-button (click)="openDialog('Update',element)">
+          <mat-icon class="iconStyle" matTooltip="Edit Issue Data">edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="openDialog('Update',element)">
+          <mat-icon class="iconStyle" matTooltip="Edit Issue Data">delete</mat-icon>
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>dialpad</mat-icon>
+            <span>Redial</span>
+          </button>
+          <button mat-menu-item disabled>
+            <mat-icon>voicemail</mat-icon>
+            <span>Check voice mail</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>notifications_off</mat-icon>
+            <span>Disable alerts</span>
+          </button>
+        </mat-menu>
       </div>
     </td>
   </ng-container>

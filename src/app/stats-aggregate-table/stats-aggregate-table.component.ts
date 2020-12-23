@@ -11,7 +11,7 @@ import {Exercise} from "../interfaces/Exercise";
 @Component({
   selector: 'app-stats-aggregate-table',
   templateUrl: './stats-aggregate-table.component.html',
-  styleUrls: ['./stats-aggregate-table.component.css']
+  styleUrls: ['./stats-aggregate-table.component.scss']
 })
 export class StatsAggregateTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -42,7 +42,7 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit, OnCh
   @Input()
   selectedExercise: {
     id: string,
-    name: string
+    exerciseName: string
   }
   uatTesting: any;
 
@@ -109,6 +109,16 @@ export class StatsAggregateTableComponent implements OnInit, AfterViewInit, OnCh
         default: return 0;
       }
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.data.filter = filterValue.trim().toLowerCase();
+    this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
+
+    if (this.data.paginator) {
+      this.data.paginator.firstPage();
+    }
   }
 
   test() {

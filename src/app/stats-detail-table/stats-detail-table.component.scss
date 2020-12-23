@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+@mixin app-detail-table-theme($theme) {
+  $accent: map-get($theme, accent);
+  $background: map-get($theme, background);
+  $background-color: mat-color($background, card);
+
+  .detail-table {
+    @include mat-elevation(2);
+    background-color: mat-color($accent);
+  }
+  table {
+    width: 100%;
+  }
+  .toolbar {
+    background-color: mat-color($accent)
+  }
+  .search-icon-center {
+    padding-top: 8px;
+  }
+}
+
+

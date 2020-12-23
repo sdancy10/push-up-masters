@@ -8,7 +8,7 @@ import {MatTable} from "@angular/material/table";
 @Component({
   selector: 'app-exercises',
   templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.css']
+  styleUrls: ['./exercises.component.scss']
 })
 export class ExercisesComponent implements OnInit {
 

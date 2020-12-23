@@ -5,7 +5,7 @@ import {Exercise} from "../interfaces/Exercise";
 @Component({
   selector: 'app-dialog-box',
   templateUrl: './dialog-box-exercise.component.html',
-  styleUrls: ['./dialog-box-exercise.component.css']
+  styleUrls: ['./dialog-box-exercise.component.scss']
 })
 export class DialogBoxExerciseComponent {
   action:string;
