@@ -21,6 +21,9 @@
             "aot": false,
             "assets": [
               "src/favicon.ico",
+              "src/favicon-32.png",
+              "src/icon-192.png",
+              "src/apple-touch-icon.png",
               "src/assets"
             ],
             "styles": [
