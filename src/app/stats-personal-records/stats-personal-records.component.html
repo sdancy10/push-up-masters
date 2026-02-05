@@ -1,0 +1,59 @@
+<div class="toolbar">
+  <div class="spacer"></div>
+  <span class="toolbar-title">Personal Records & Streaks</span>
+  <div class="spacer"></div>
+</div>
+
+<div *ngIf="!data || data.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">emoji_events</mat-icon>
+  <p class="empty-title">No records yet</p>
+  <p class="empty-subtitle">Try adjusting your filters to see results.</p>
+</div>
+
+<div class="records-grid" *ngIf="records.length > 0">
+  <div class="user-card" *ngFor="let record of records">
+    <div class="user-header">
+      <mat-icon class="user-avatar">person</mat-icon>
+      <span class="user-name">{{record.userId}}</span>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card highlight">
+        <mat-icon class="stat-icon">fitness_center</mat-icon>
+        <div class="stat-value">{{record.bestSingleSet}}</div>
+        <div class="stat-label">Best Single Set</div>
+        <div class="stat-date">{{record.bestSingleSetDate}}</div>
+      </div>
+      <div class="stat-card highlight">
+        <mat-icon class="stat-icon">trending_up</mat-icon>
+        <div class="stat-value">{{record.bestDailyTotal}}</div>
+        <div class="stat-label">Best Daily Total</div>
+        <div class="stat-date">{{record.bestDailyTotalDate}}</div>
+      </div>
+      <div class="stat-card highlight">
+        <mat-icon class="stat-icon">repeat</mat-icon>
+        <div class="stat-value">{{record.mostSetsInDay}}</div>
+        <div class="stat-label">Most Sets in a Day</div>
+        <div class="stat-date">{{record.mostSetsInDayDate}}</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <mat-icon class="stat-icon streak-icon">local_fire_department</mat-icon>
+        <div class="stat-value">{{record.currentStreak}} <span class="stat-unit">days</span></div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+      <div class="stat-card">
+        <mat-icon class="stat-icon streak-icon">whatshot</mat-icon>
+        <div class="stat-value">{{record.longestStreak}} <span class="stat-unit">days</span></div>
+        <div class="stat-label">Longest Streak</div>
+      </div>
+      <div class="stat-card">
+        <mat-icon class="stat-icon">equalizer</mat-icon>
+        <div class="stat-value">{{record.totalReps}}</div>
+        <div class="stat-label">Total Reps</div>
+      </div>
+    </div>
+  </div>
+</div>

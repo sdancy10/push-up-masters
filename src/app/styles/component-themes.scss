@@ -3,6 +3,8 @@
 @import '../exercise-analytics-page/exercise-analytics-page.component';
 @import '../app.component';
 @import '../stats-detail-table/stats-detail-table.component';
+@import '../exercise-filter/exercise-filter.component';
+@import '../stats-personal-records/stats-personal-records.component';
 
 
 @mixin component-themes($theme) {
@@ -11,4 +13,6 @@
   @include app-main-theme($theme);
   @include app-analytics-page($theme);
   @include app-detail-table-theme($theme);
+  @include app-exercise-filter-theme($theme);
+  @include app-personal-records-theme($theme);
 }

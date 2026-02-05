@@ -1,0 +1,55 @@
+@import '~@angular/material/theming';
+
+@mixin app-exercise-filter-theme($theme) {
+  $accent: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .filter-bar {
+    background-color: mat-color($background, card);
+    border-bottom: 1px solid mat-color($foreground, divider);
+  }
+
+  .filter-summary {
+    background-color: mat-color($background, card);
+    border-bottom: 1px solid mat-color($foreground, divider);
+    color: mat-color($foreground, secondary-text);
+
+    .result-count {
+      color: mat-color($foreground, text);
+    }
+  }
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+
+  mat-form-field {
+    flex: 1 1 150px;
+    max-width: 200px;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
+  }
+}
+
+.filter-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  font-size: 12px;
+
+  .result-count {
+    font-weight: 500;
+  }
+
+  .date-range {
+    font-style: italic;
+  }
+}

@@ -1,0 +1,144 @@
+@import '~@angular/material/theming';
+
+@mixin app-personal-records-theme($theme) {
+  $accent: map-get($theme, accent);
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .records-grid {
+    padding: 16px;
+  }
+
+  .user-card {
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: mat-color($background, card);
+    border: 1px solid mat-color($foreground, divider);
+  }
+
+  .user-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid mat-color($foreground, divider);
+
+    .user-avatar {
+      font-size: 28px;
+      height: 28px;
+      width: 28px;
+      color: mat-color($accent);
+      margin-right: 12px;
+    }
+    .user-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: mat-color($foreground, text);
+    }
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .stat-card {
+    flex: 1 1 0;
+    min-width: 120px;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    background-color: mat-color($background, background);
+    border: 1px solid mat-color($foreground, divider);
+
+    &.highlight {
+      border-color: mat-color($accent, 0.3);
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      height: 24px;
+      width: 24px;
+      color: mat-color($accent);
+      margin-bottom: 4px;
+
+      &.streak-icon {
+        color: #ff6d00;
+      }
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: mat-color($foreground, text);
+      line-height: 1.2;
+
+      .stat-unit {
+        font-size: 12px;
+        font-weight: 400;
+        color: mat-color($foreground, secondary-text);
+      }
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: mat-color($foreground, secondary-text);
+      margin-top: 2px;
+    }
+    .stat-date {
+      font-size: 11px;
+      color: mat-color($foreground, hint-text);
+      margin-top: 2px;
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+
+    .empty-icon {
+      font-size: 48px;
+      height: 48px;
+      width: 48px;
+      color: mat-color($foreground, secondary-text);
+      margin-bottom: 16px;
+    }
+    .empty-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: mat-color($foreground, text);
+      margin: 0 0 4px;
+    }
+    .empty-subtitle {
+      font-size: 13px;
+      color: mat-color($foreground, secondary-text);
+      margin: 0;
+    }
+  }
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.toolbar-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

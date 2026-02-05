@@ -14,79 +14,82 @@ import {AuthService} from "../services/auth.service";
   templateUrl: './stats-detail-table.component.html',
   styleUrls: ['./stats-detail-table.component.scss']
 })
-export class StatsDetailTableComponent implements OnInit,AfterViewInit, OnChanges {
+export class StatsDetailTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   displayedColumns: {key,name}[];
   columnsToDisplay: string[] = [];
-  data: MatTableDataSource<ExerciseExecution>;
+  tableDataSource: MatTableDataSource<ExerciseExecution>;
   splicedData: any;
   offset = 0;
   pageSize = 5;
   pageSizeOptions = [3,5,10];
+
   @Input()
-  changeTrigger: number;
-  @Input()
-  selectedExercise: {
-    id: string,
-    exerciseName: string
-  }
+  data: ExerciseExecution[] = [];
 
   constructor(public dialog: MatDialog,
               private exerciseExecutionService: ExerciseExecutionsService,
               public authService: AuthService) { }
 
   ngOnInit() {
-    this.data = new MatTableDataSource<ExerciseExecution>();
+    this.tableDataSource = new MatTableDataSource<ExerciseExecution>();
     this.displayedColumns = [{key:'set', name:'Set'}
       ,{key:'userId', name:'Name'}
       ,{key:'reps', name:'Reps'}
-      //,{key:'duration', name:'Duration'}
       ,{key:'creationDate', name:'Date'}
       ,{key:'Edit', name:'Edit'}
       ];
     this.displayedColumns.slice().forEach( pair => this.columnsToDisplay.push(pair.name));
-    this.getExerciseExecutions()
-    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.data.length]
+    this.processData();
+    this.pageSizeOptions = [5, 10, 15, 20, 25, this.tableDataSource.data.length]
   }
+
   ngOnChanges(changes: SimpleChanges) {
-    this.getExerciseExecutions()
+    if (changes.data) {
+      this.processData();
+    }
+  }
+
+  private processData(): void {
+    if (!this.data || this.data.length === 0) {
+      this.tableDataSource = new MatTableDataSource<ExerciseExecution>();
+      this.splicedData = [];
+      return;
+    }
+    this.tableDataSource = new MatTableDataSource(this.data.slice());
+    this.tableDataSource.data.sort((a, b) => (a.creationDate < b.creationDate) ? 1 : -1);
+    this.splicedData = this.tableDataSource.filteredData.slice(this.offset).slice(0, this.pageSize);
+
+    if (this.paginator) {
+      this.tableDataSource.paginator = this.paginator;
+    }
+    if (this.sort) {
+      this.tableDataSource.sort = this.sort;
+    }
   }
 
   ngAfterViewInit(): void {
-    this.data.sort = this.sort;
-    this.data.paginator = this.paginator;
-    this.pageSizeOptions = [5, 10, 15, 20, 25, this.data.filteredData.length]
-  }
-  getExerciseExecutions() {
-    this.exerciseExecutionService.getExerciseExecutions(this.selectedExercise.id).subscribe(data => {
-      this.data = new MatTableDataSource(data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data()
-        } as ExerciseExecution;
-      }));
-      this.data.data.sort((a,b)=> (a.creationDate < b.creationDate) ? 1:-1)
-      this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
-    });
+    this.tableDataSource.sort = this.sort;
+    this.tableDataSource.paginator = this.paginator;
+    this.pageSizeOptions = [5, 10, 15, 20, 25, this.tableDataSource.filteredData.length]
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.data.filter = filterValue.trim().toLowerCase();
-    this.splicedData = this.data.filteredData.slice(this.offset).slice(0, this.pageSize);
+    this.tableDataSource.filter = filterValue.trim().toLowerCase();
+    this.splicedData = this.tableDataSource.filteredData.slice(this.offset).slice(0, this.pageSize);
 
-    if (this.data.paginator) {
-      this.data.paginator.firstPage();
+    if (this.tableDataSource.paginator) {
+      this.tableDataSource.paginator.firstPage();
     }
   }
 
   pageChangeEvent(event: PageEvent) {
     const offset = ((event.pageIndex + 1) - 1) * event.pageSize;
-    this.splicedData = this.data.filteredData.slice(offset).slice(0, event.pageSize);
+    this.splicedData = this.tableDataSource.filteredData.slice(offset).slice(0, event.pageSize);
   }
-
 
   sortData(sort: Sort) {
     const data = this.splicedData.slice();
@@ -165,4 +168,3 @@ export class StatsDetailTableComponent implements OnInit,AfterViewInit, OnChange
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
-

@@ -1,0 +1,103 @@
+.sign-in-dialog {
+  padding: 0;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px 0 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.dialog-body {
+  padding: 16px 24px 24px 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.sign-in-btn {
+  margin-top: 4px;
+  padding: 8px 0;
+  font-size: 15px;
+}
+
+.forgot-link {
+  text-align: right;
+  margin: -8px 0 12px 0;
+
+  a {
+    font-size: 13px;
+    cursor: pointer;
+    opacity: 0.7;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  span {
+    padding: 0 12px;
+    font-size: 13px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.google-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .google-icon {
+    height: 22px;
+    width: 22px;
+    margin-right: 10px;
+    vertical-align: middle;
+    border-radius: 2px;
+  }
+}
+
+.error-message {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #ef5350;
+  text-align: center;
+}
+
+::ng-deep .mat-form-field-prefix {
+  margin-right: 8px;
+
+  .mat-icon {
+    font-size: 20px;
+    opacity: 0.6;
+  }
+}

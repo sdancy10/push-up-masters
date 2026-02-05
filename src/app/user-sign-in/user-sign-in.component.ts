@@ -18,8 +18,9 @@ export class UserSignInComponent implements OnInit {
   openDialog(action,obj) {
     obj.action = action;
     const dialogRef = this.dialog.open(DialogSignInComponent, {
-      width: '450px',
+      width: '400px',
       maxWidth: '90%',
+      panelClass: 'sign-in-dialog-panel',
       data:obj
     });
 

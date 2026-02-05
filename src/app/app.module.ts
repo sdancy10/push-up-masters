@@ -40,6 +40,9 @@ import {AppRoutingModule} from "./app-router/app-router.module";
 import {GoogleAnalyticsEventsService} from "./services/google-analytics-events.service";
 import { DialogSignInComponent } from './dialog-sign-in/dialog-sign-in.component';
 import { ExerciseAnalyticsPageComponent } from './exercise-analytics-page/exercise-analytics-page.component';
+import { ExerciseFilterComponent } from './exercise-filter/exercise-filter.component';
+import { StatsDailySummaryComponent } from './stats-daily-summary/stats-daily-summary.component';
+import { StatsPersonalRecordsComponent } from './stats-personal-records/stats-personal-records.component';
 
 
 
@@ -60,7 +63,10 @@ import { ExerciseAnalyticsPageComponent } from './exercise-analytics-page/exerci
     UserRegistrationSnackbarComponent,
     HomePageComponent,
     DialogSignInComponent,
-    ExerciseAnalyticsPageComponent
+    ExerciseAnalyticsPageComponent,
+    ExerciseFilterComponent,
+    StatsDailySummaryComponent,
+    StatsPersonalRecordsComponent
   ],
   imports: [
     AppRoutingModule,

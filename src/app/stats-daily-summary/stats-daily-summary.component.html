@@ -1,0 +1,21 @@
+<div class="toolbar">
+  <div class="spacer"></div>
+  <span class="toolbar-title">Daily Summary</span>
+  <div class="spacer"></div>
+</div>
+
+<div *ngIf="!data || data.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">bar_chart</mat-icon>
+  <p class="empty-title">No daily data</p>
+  <p class="empty-subtitle">Try adjusting your filters to see results.</p>
+</div>
+
+<div class="chart-container" *ngIf="data && data.length > 0">
+  <canvas baseChart
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [colors]="barChartColors"
+          [legend]="barChartLegend"
+          [chartType]="barChartType"></canvas>
+</div>

@@ -16,7 +16,6 @@ export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
     scales: {
-      // We use this empty structure as a placeholder for dynamic theming.
       xAxes: [{}],
       yAxes: [
         {
@@ -78,77 +77,81 @@ export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }
-
   ];
   public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [pluginAnnotations];
   public exerciseData: ExerciseExecution[];
+
   @Input()
-  changeTrigger: number;
-  @Input()
-  selectedExercise: {
-    id: string,
-    exerciseName: string
-  }
+  data: ExerciseExecution[] = [];
+
   public lineChartMaxLen = 0;
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
   constructor(private exerciseService: ExerciseExecutionsService) {}
 
   ngOnInit() {
-
-    this.exerciseService.getExerciseExecutions(this.selectedExercise.id).subscribe(data => {
-      this.exerciseData = data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data()
-        } as ExerciseExecution;
-      });
-
-      let aggData = this.exerciseService.getAggregateData(this.exerciseData, ['userId', 'creationDate']);
-      let lineData = this.exerciseService.getAggregateLineData(aggData, ['userId']);
-      this.lineChartData = lineData;
-      this.lineChartLabels = [];
-      let tmpUsers: { userId: string; createDate: string }[] = [];
-      this.exerciseData.forEach( u => {
-        let dateExists = false
-        tmpUsers.forEach( tu => {
-          if (tu.userId == u.userId && tu.createDate == String(u.creationDate)) {
-            dateExists = true
-          }
-        })
-        if (!dateExists) {
-          tmpUsers.push({userId: u.userId, createDate: String(u.creationDate)})
-        }
-      });
-
-      let userDates = this.groupBy(tmpUsers,['userId']);
-      let maxUserDateLen = 0
-      Object.keys(userDates).forEach( k => {
-        if (userDates[k].length > maxUserDateLen) {
-          maxUserDateLen = userDates[k].length
-        }
-      })
-      for (let i = 1; i < maxUserDateLen+1; i++) {
-        this.lineChartLabels.push('Day ' + (i).toString())
-      }
-
-    });
+    this.processData();
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.data) {
+      this.processData();
+    }
+  }
+
+  private processData(): void {
+    if (!this.data || this.data.length === 0) {
+      this.lineChartData = [{ data: [] }];
+      this.lineChartLabels = [];
+      return;
+    }
+
+    // Shallow copy to avoid mutating shared data (getAggregateData mutates creationDate)
+    const dataCopy = this.data.map(d => ({...d}));
+    this.exerciseData = dataCopy;
+
+    let aggData = this.exerciseService.getAggregateData(dataCopy, ['userId', 'creationDate']);
+    let lineData = this.exerciseService.getAggregateLineData(aggData, ['userId']);
+    this.lineChartData = lineData;
+    this.lineChartLabels = [];
+
+    let tmpUsers: { userId: string; createDate: string }[] = [];
+    this.exerciseData.forEach(u => {
+      let dateExists = false;
+      tmpUsers.forEach(tu => {
+        if (tu.userId == u.userId && tu.createDate == String(u.creationDate)) {
+          dateExists = true;
+        }
+      });
+      if (!dateExists) {
+        tmpUsers.push({userId: u.userId, createDate: String(u.creationDate)});
+      }
+    });
+
+    let userDates = this.groupBy(tmpUsers, ['userId']);
+    let maxUserDateLen = 0;
+    Object.keys(userDates).forEach(k => {
+      if (userDates[k].length > maxUserDateLen) {
+        maxUserDateLen = userDates[k].length;
+      }
+    });
+    for (let i = 1; i < maxUserDateLen + 1; i++) {
+      this.lineChartLabels.push('Day ' + (i).toString());
+    }
+  }
+
   private groupBy(objectArray, property) {
     return objectArray.reduce(function (acc, obj) {
       var key = '';
-      property.forEach(p => key += obj[p])
+      property.forEach(p => key += obj[p]);
       if (!acc[key]) {
         acc[key] = [];
       }
       acc[key].push(obj);
       return acc;
     }, {});
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    this.ngOnInit()
   }
 
   public randomize(): void {
@@ -194,6 +197,5 @@ export class StatsAggregateLinechartComponent implements OnInit, OnChanges {
 
   public changeLabel() {
     this.lineChartLabels[2] = ['1st Line', '2nd Line'];
-    // this.chart.update();
   }
 }

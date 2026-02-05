@@ -1,33 +1,35 @@
 <div class="home">
+  <app-exercise-filter
+    [exercises]="exercises"
+    [availableUsers]="availableUsers"
+    [dataDateRange]="dataDateRange"
+    [displayedDateRange]="displayedDateRange"
+    [resultCount]="filteredData.length"
+    (filterChange)="onFilterChange($event)">
+  </app-exercise-filter>
   <mat-tab-group>
     <mat-tab label="Performance Leaderboard">
       <ng-template matTabContent>
-        <app-stats-aggregate-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-table>
+        <app-stats-aggregate-table [data]="filteredData"></app-stats-aggregate-table>
       </ng-template>
     </mat-tab>
     <mat-tab label="Performance Trend">
       <ng-template matTabContent>
-        <app-stats-aggregate-linechart [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-aggregate-linechart>
+        <app-stats-aggregate-linechart [data]="filteredData"></app-stats-aggregate-linechart>
       </ng-template>
     </mat-tab>
     <mat-tab label="Performance Detail">
-      <app-stats-table [selectedExercise]="selectedExercise" [changeTrigger]="changeTrigger" *ngIf="selectedExercise"></app-stats-table>
+      <app-stats-table [data]="filteredData"></app-stats-table>
     </mat-tab>
-    <mat-tab disabled>
-      <ng-template mat-tab-label>
-        Exercise: <b>&nbsp;{{selectedExercise.exerciseName}}</b>
-        <button class="button-" mat-icon-button [matMenuTriggerFor]="menu2" >
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menu2="matMenu">
-          <ng-container *ngFor="let e of exercises">
-            <button mat-menu-item (click)="setSelectedExercise(e)">{{e.exerciseName}}</button>
-          </ng-container>
-        </mat-menu>
+    <mat-tab label="Daily Summary">
+      <ng-template matTabContent>
+        <app-stats-daily-summary [data]="filteredData"></app-stats-daily-summary>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Records & Streaks">
+      <ng-template matTabContent>
+        <app-stats-personal-records [data]="filteredData"></app-stats-personal-records>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
 </div>
-
-
-

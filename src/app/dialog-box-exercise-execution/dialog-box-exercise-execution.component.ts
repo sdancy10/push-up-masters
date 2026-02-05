@@ -5,6 +5,7 @@ import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validat
 import {ExerciseExecution} from "../interfaces/ExerciseExecution";
 import {Exercise} from "../interfaces/Exercise";
 import {ExerciseService} from "../services/exercise.service";
+import {AuthService} from "../services/auth.service";
 import {ErrorStateMatcher} from "@angular/material/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -51,10 +52,16 @@ export class DialogBoxExerciseExecutionComponent implements OnInit {
     public data: ExerciseExecution,
     private _snackBar: MatSnackBar,
     public exerciseService: ExerciseService,
+    private authService: AuthService,
     private formBuilder: FormBuilder)
   {
     this.local_data = {... data};
     this.action = this.local_data.action;
+
+    // Auto-populate userId for new entries
+    if (this.action === 'Add' && this.authService.authenticated) {
+      this.nameFormControl.setValue(this.authService.currentUserDisplayName);
+    }
   }
 
   ngOnInit() {

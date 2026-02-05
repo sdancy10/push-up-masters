@@ -1,6 +1,5 @@
-
 <div class="toolbar">
-  <button mat-icon-button [matMenuTriggerFor]="menu2" >
+  <button mat-icon-button [matMenuTriggerFor]="menu2" matTooltip="Aggregation type">
     <mat-icon>view_headline</mat-icon>
   </button>
   <mat-menu #menu2="matMenu">
@@ -10,30 +9,40 @@
   </mat-menu>
 
   <div class="spacer"></div>
-  <div class="spacer"><h3><b>Leaderboard</b></h3></div>
-  <span> <mat-icon class="search-icon-center" matPrefix>search</mat-icon></span>
-  <span><input matInput (keyup)="applyFilter($event)" placeholder="Search..."></span>
+  <span class="toolbar-title">Leaderboard</span>
+  <div class="spacer"></div>
+  <div class="search-field">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input (keyup)="applyFilter($event)" placeholder="Search...">
+  </div>
 </div>
 
-<table mat-table [dataSource]="splicedData" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
-  centered header for filters
-  <ng-container [matColumnDef]="column.name" *ngFor="let column of displayedColumns" >
-    <ng-template [ngIf]="column.name !== 'Controls'">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> <p> {{column.name}}</p> </th>
-    </ng-template>
+<div *ngIf="!data || data.length === 0" class="empty-state">
+  <mat-icon class="empty-icon">leaderboard</mat-icon>
+  <p class="empty-title">No leaderboard data</p>
+  <p class="empty-subtitle">Try adjusting your filters to see results.</p>
+</div>
 
-    <td mat-cell *matCellDef="let element" [width]="column.key === 'exerciseSummary' ? '200px' : ''">
-      <p *ngIf="column.key != 'creationDate' && column.key != 'Edit'">{{element[column.key]}}</p>
-    </td>
-  </ng-container>
+<ng-container *ngIf="data && data.length > 0">
+  <table mat-table [dataSource]="splicedData" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
+    <ng-container [matColumnDef]="column.name" *ngFor="let column of displayedColumns" >
+      <ng-template [ngIf]="column.name !== 'Controls'">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column.name}}</th>
+      </ng-template>
 
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-</table>
-<mat-paginator #paginator
-               [length]="this.groupByUserData.data.length"
-               [pageSize]="pageSize"
-               [showFirstLastButtons]="true"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="pageChangeEvent($event)">
-</mat-paginator>
+      <td mat-cell *matCellDef="let element">
+        <span>{{element[column.key]}}</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+  </table>
+  <mat-paginator #paginator
+                 [length]="this.groupByUserData.data.length"
+                 [pageSize]="pageSize"
+                 [showFirstLastButtons]="true"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="pageChangeEvent($event)">
+  </mat-paginator>
+</ng-container>

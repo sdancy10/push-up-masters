@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, Optional} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -9,63 +9,78 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./dialog-sign-in.component.scss']
 })
 export class DialogSignInComponent implements OnInit {
-  action:string;
+  action: string;
   local_data: any;
-  hide: boolean;
+  hide = true;
   signInForm: FormGroup;
-  usernameFormControl = new FormControl('',[Validators.required]);
-  passwordFormControl = new FormControl('',[Validators.required]);
+  errorMessage: string = null;
+  usernameFormControl = new FormControl('', [Validators.required]);
+  passwordFormControl = new FormControl('', [Validators.required]);
+
   constructor(
     public dialogRef: MatDialogRef<DialogSignInComponent>,
-    //@Optional() is used to prevent error if no data is passed
-    @Optional() @Inject(MAT_DIALOG_DATA)
-    public data: any,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
-    public authService: AuthService,)
-     {
-      this.hide = true;
-      this.local_data = {... data};
-      this.action = this.local_data.action;
-     }
+    public authService: AuthService
+  ) {
+    this.local_data = {...data};
+    this.action = this.local_data.action;
+  }
 
   ngOnInit() {
-    this.signInForm = this.formBuilder.group (
-      {
-        username: this.usernameFormControl,
-        password: this.passwordFormControl,
-        action: this.local_data.action
-      }
-    );
+    this.signInForm = this.formBuilder.group({
+      username: this.usernameFormControl,
+      password: this.passwordFormControl,
+      action: this.local_data.action
+    });
   }
-  anonymousSignIn() {
-    this.authService.anonymousSignIn().then((data) => {
+
+  googleSignIn() {
+    this.errorMessage = null;
+    this.authService.googleSignIn().then((data) => {
       if (this.authService.authenticated) {
         this.closeDialog('signin-success');
       }
-    });
-  }
-  googleSignIn() {
-    this.authService.googleSignIn().then((data) => {
-      if (this.authService.authenticated) {
-        console.warn(this.authService)
-        this.closeDialog('signin-success')
-      }
-    });
-  }
-  emailSignIn() {
-    if (this.signInForm.invalid) {
-      return;
-    }
-    this.authService.emailSignIn(this.usernameFormControl.value,this.passwordFormControl.value).then((data) => {
-      if (this.authService.authenticated) {
-        console.warn(this.authService)
-        this.closeDialog('signin-success')
-      }
+    }).catch(err => {
+      this.errorMessage = 'Google sign-in failed. Please try again.';
     });
   }
 
-  closeDialog(reason: string){
-    if (reason == null || reason == undefined) reason = "signin-cancel"
+  emailSignIn() {
+    if (this.signInForm.invalid) {
+      this.usernameFormControl.markAsTouched();
+      this.passwordFormControl.markAsTouched();
+      return;
+    }
+    this.errorMessage = null;
+    this.authService.emailSignIn(
+      this.usernameFormControl.value,
+      this.passwordFormControl.value
+    ).then((data) => {
+      if (this.authService.authenticated) {
+        this.closeDialog('signin-success');
+      } else {
+        this.errorMessage = 'Invalid email or password.';
+      }
+    }).catch(err => {
+      this.errorMessage = 'Invalid email or password.';
+    });
+  }
+
+  resetPassword() {
+    const email = this.usernameFormControl.value;
+    if (!email) {
+      this.errorMessage = 'Enter your email above, then click "Forgot your password?"';
+      return;
+    }
+    this.errorMessage = null;
+    this.authService.resetPassword(email).then(() => {
+      this.errorMessage = 'Password reset email sent. Check your inbox.';
+    });
+  }
+
+  closeDialog(reason: string) {
+    if (reason == null || reason == undefined) reason = 'signin-cancel';
     this.dialogRef.close({event: reason});
   }
 }
